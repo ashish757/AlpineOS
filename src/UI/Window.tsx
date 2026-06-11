@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, memo } from "react";
 import { useDispatch } from "react-redux";
 import { closeApp, focusApp } from "../store/windowSlice"; 
 import type { WindowState } from "../store/windowSlice";
@@ -7,7 +7,7 @@ interface WindowProps {
   info: WindowState;
 }
 
-export const Window = ({info}: WindowProps) => {
+export const Window = memo(({info}: WindowProps) => {
   const dispatch = useDispatch();
   const windowRef = useRef<HTMLDivElement>(null);
 
@@ -91,4 +91,4 @@ export const Window = ({info}: WindowProps) => {
       </div>
     </div>
   );
-};
+});

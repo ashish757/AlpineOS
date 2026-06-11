@@ -23,7 +23,7 @@ const OsDesktop: React.FC = () => {
     <Wallpaper />     
 
       <main className="flex-1 relative z-10 p-4">
-        {windows.map(window => window.isOpen && <Window info={window} />)}
+        {windows.map(window => window.isOpen && <Window key={window.id} info={window} />)}
       </main>
 
       <Dock />
