@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+@layer base {
+  html, body, #root {
+    @apply overflow-hidden w-screen h-screen m-0 bg-slate-900;
+    user-select: none;
+    touch-action: none;
+  }
+}
