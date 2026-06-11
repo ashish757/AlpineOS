@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import type {RootState} from './store/store'
 import Dock from './UI/Dock';
@@ -6,16 +6,16 @@ import Wallpaper from './UI/Wallpaper';
 
 const OsDesktop: React.FC = () => {
   const apps = useSelector((state: RootState) => state.os.apps);
-
-  useEffect(() => {
-    const handleContextMenu = (e: MouseEvent) => {
-      e.preventDefault();
-    };
-    document.addEventListener('contextmenu', handleContextMenu);
-    return () => {
-      document.removeEventListener('contextmenu', handleContextMenu);
-    };
-  }, []);
+  // keeping context menu for development 
+  // useEffect(() => {
+  //   const handleContextMenu = (e: MouseEvent) => {
+  //     e.preventDefault();
+  //   };
+  //   document.addEventListener('contextmenu', handleContextMenu);
+  //   return () => {
+  //     document.removeEventListener('contextmenu', handleContextMenu);
+  //   };
+  // }, []);
 
   return (
     <div className="w-screen h-screen relative overflow-hidden flex flex-col">
