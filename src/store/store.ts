@@ -1,9 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit';
-import osReducer from './osSlice';
+import windowReducer from './windowSlice';
 
 export const store = configureStore({
   reducer: {
-    os: osReducer,
+    windows: windowReducer,
   },
 });
 

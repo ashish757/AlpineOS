@@ -3,9 +3,10 @@ import { useSelector } from 'react-redux';
 import type {RootState} from './store/store'
 import Dock from './UI/Dock';
 import Wallpaper from './UI/Wallpaper';
+import { Window } from './UI/Window';
 
 const OsDesktop: React.FC = () => {
-  const apps = useSelector((state: RootState) => state.os.apps);
+  const windows = useSelector((state: RootState) => state.windows.active);
   // keeping context menu for development 
   // useEffect(() => {
   //   const handleContextMenu = (e: MouseEvent) => {
@@ -19,14 +20,10 @@ const OsDesktop: React.FC = () => {
 
   return (
     <div className="w-screen h-screen relative overflow-hidden flex flex-col">
-<Wallpaper />     
+    <Wallpaper />     
 
       <main className="flex-1 relative z-10 p-4">
-        {apps.map(app => (
-          <div key={app.id} className="text-white">
-            App {app.id} is {app.isOpen ? 'Open' : 'Closed'}
-          </div>
-        ))}
+        {windows.map(window => window.isOpen && <Window info={window} />)}
       </main>
 
       <Dock />
