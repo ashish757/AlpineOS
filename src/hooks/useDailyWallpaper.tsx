@@ -4,8 +4,11 @@ export const useDailyWallpaper = () => {
   const [bgUrl, setBg] = useState<string | null>(null);
   const [isLoading, setLoading] = useState<boolean>(true);
   const [isErr, setErr] = useState<boolean>(false);
+  const apiKey = import.meta.env.VITE_NASA_API_KEY;
 
-  const reqUrl = `https://api.nasa.gov/planetary/apod?api_key=${import.meta.env.VITE_NASA_API_KEY}`;
+  
+  
+  const reqUrl = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}`;
 
   useEffect(() => {
     const getBg = async () => {
@@ -40,5 +43,9 @@ export const useDailyWallpaper = () => {
     getBg();
   }, [reqUrl]);
 
+  if (!apiKey) {
+    console.error("NASA API key is not set");
+    return { bgUrl: './assets/default-wallpaper.jpg', isLoading: false, isErr: false };
+  }
   return { bgUrl, isLoading, isErr };
 };
