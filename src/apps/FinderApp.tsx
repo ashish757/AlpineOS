@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { type RootState } from '../store/store'
 import { createFolder, createFile } from '../store/fileSystemSlice'
+import { useFileHandler } from '../hooks/useFileHandler'
+import type { WindowState } from '../store/windowSlice'
 
-export const FinderApp = () => {
+export const FinderApp = ({winInfo}: { winInfo: WindowState }) => {
   const dispatchAction = useDispatch()
   const fileSystemState = useSelector((st: RootState) => st.fileSystem)
 
@@ -11,14 +13,35 @@ export const FinderApp = () => {
   const [position, setPosition] = useState(0)
   const [selectedIds, setSelectedIds] = useState<string[]>([])
 
-  const folderId = history[position]
+  const {openFile} = useFileHandler();
+
+  const folderId = winInfo.args?.startFolderId || history[position]
+
+  const currentPath = (() => {
+    let currentId = folderId;
+    const pathParts: string[] = [];
+    let depthGuard = 50;
+
+    while (currentId && depthGuard > 0) {
+      const folder = fileSystemState.folders.find((f) => f.id === currentId);
+      if (!folder) break;
+
+      if (folder.name !== '~' && folder.name !== '/' && folder.name.toLowerCase() !== 'root') {
+        pathParts.unshift(folder.name);
+      }
+
+      currentId = folder.parentId;
+      depthGuard--;
+    }
+
+    return '/' + pathParts.join('/');
+  })();
 
   const currentFolderContents = {
     folders: fileSystemState.folders.filter((f) => f.parentId === folderId),
     files: fileSystemState.files.filter((f) => f.parentId === folderId),
   }
 
-  const currentFolderDetails = fileSystemState.folders.find((f) => f.id === folderId)
 
   const isBackDisabled = position === 0
   const isForwardDisabled = position === history.length - 1
@@ -178,6 +201,7 @@ export const FinderApp = () => {
               <div
                 key={fItem.id}
                 onClick={(e) => handleItemSelect(e, fItem.id)}
+                onDoubleClick={(e) => { e.stopPropagation(); openFile(fItem.id); }}
                 className={`group flex cursor-pointer flex-col items-center gap-2 rounded-lg border border-transparent transition-all ${selectedIds.includes(fItem.id) ? "bg-white/10 border-white/20" : "hover:bg-white/5"
                   }`}
               >
@@ -199,7 +223,14 @@ export const FinderApp = () => {
           </div>
 
           <div className="flex h-8 shrink-0 items-center border-t border-white/5 bg-[#252526] px-4 text-[11px] font-medium tracking-wide text-slate-400">
-            {currentFolderDetails ? `/${currentFolderDetails.name === '~' || currentFolderDetails.name === '/' || currentFolderDetails.name === 'root' ? '' : currentFolderDetails.name}` : "Unknown Location"}
+            {
+              currentPath.split('/').map((part, idx) => (
+                <React.Fragment key={idx}>
+                  <span>{part}</span>
+                  {idx < currentPath.split('/').length - 1 && <span className="mx-1 text-slate-600">/</span>}
+                </React.Fragment>
+              ))
+            }
           </div>
         </div>
       </div>

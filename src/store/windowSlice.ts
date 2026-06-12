@@ -10,6 +10,7 @@ export interface WindowState {
   componentId: string;
   x: number;
   y: number;
+  args?: Record<string, string>;
 }
 
 export interface Windows {
@@ -26,7 +27,7 @@ export const windowSlice = createSlice({
   name: 'os',
   initialState,
   reducers: {
-    createWindow: (state, action: PayloadAction<{id: string, processId: string, config: ProcessConfig}>) => {
+    createWindow: (state, action: PayloadAction<{id: string, processId: string, config: ProcessConfig, args?: Record<string, string>}>) => {
       const newWindow: WindowState = {
         id: action.payload.id,
         processId: action.payload.processId,
@@ -36,6 +37,7 @@ export const windowSlice = createSlice({
         componentId: action.payload.config.componentId,
         x: 150 + (state.active.length * 30),
         y: 100 + (state.active.length * 30),
+        args: action.payload.args
       };
       state.active.push(newWindow);
       state.highestIndex += 1;
@@ -59,10 +61,16 @@ export const windowSlice = createSlice({
         window.x = action.payload.x;
         window.y = action.payload.y;
       }
-    }
+    },
+    updateWindowTitle: (state, action: PayloadAction<{ id: string; title: string }>) => {
+      const win = state.active.find(w => w.id === action.payload.id)
+      if (win) {
+        win.title = action.payload.title
+      }
+    },
   },
 });
 
-export const { closeWindow, createWindow, focusApp, moveWindow } = windowSlice.actions;
+export const { closeWindow, createWindow, focusApp, moveWindow, updateWindowTitle } = windowSlice.actions;
 
 export default windowSlice.reducer;

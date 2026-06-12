@@ -117,10 +117,17 @@ export const fileSystemSlice = createSlice({
             state.folders = state.folders.filter(folder => folder.id != action.payload.id)
             state.files = state.files.filter(file => file.parentId != action.payload.id)
         },
+        updateFileContent: (state, action: PayloadAction<{id: string, content: string}>) => {
+          const {id, content} =  action.payload;
+          const file = state.files.find(file => file.id === id);
+          if(file) {
+            file.content = content;
+          }
+        },
 
     }
 })
 
-export const { createFile, createFolder, deleteFile, deleteFolder } = fileSystemSlice.actions;
+export const { createFile, createFolder, deleteFile, deleteFolder, updateFileContent } = fileSystemSlice.actions;
 
 export default fileSystemSlice.reducer

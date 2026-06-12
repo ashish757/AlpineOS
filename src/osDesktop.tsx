@@ -24,10 +24,10 @@ const OsDesktop: React.FC = () => {
 
   return (
     <div className="w-screen h-screen relative overflow-hidden flex flex-col">
-      <DesktopIcons />
 
       <Wallpaper />     
       <MenuBar />
+
 
 
 
@@ -38,13 +38,16 @@ const OsDesktop: React.FC = () => {
             const Component = componentMap[window.componentId];
             return (
               <Window key={window.id} info={window}>
-                {Component ? <Component windowId={window.id} /> : <div>Component Not Found</div>}
+                {Component ? <Component winInfo={window} /> : <div>Component Not Found</div>}
               </Window>
             );
           }
           return null;
         })}
       </main>
+      
+      <DesktopIcons />
+
 
       <Dock />
     </div>
