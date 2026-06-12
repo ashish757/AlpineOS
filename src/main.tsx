@@ -5,13 +5,22 @@ import { persistor, store } from './store/store.ts'
 import './index.css'
 import App from './App.tsx'
 import { PersistGate } from 'redux-persist/integration/react'
+import { ContextMenuProvider } from './UI/ContextMenu.tsx';
+import { GlobalDialogsProvider } from './UI/GlobalDialogs.tsx';
+import { MenuBarProvider } from './UI/MenuBarContext.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <App />
+        <ContextMenuProvider>
+          <MenuBarProvider>
+            <GlobalDialogsProvider>
+              <App />
+            </GlobalDialogsProvider>
+          </MenuBarProvider>
+        </ContextMenuProvider>
       </PersistGate>
-    </Provider>
-  </StrictMode>,
+     </Provider>
+   </StrictMode>
 )

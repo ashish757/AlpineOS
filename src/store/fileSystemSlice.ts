@@ -124,10 +124,21 @@ export const fileSystemSlice = createSlice({
             file.content = content;
           }
         },
-
-    }
+        rename: (state, action: PayloadAction<{id: string, newName: string}>) => {
+          const {id, newName} = action.payload;
+          const file = state.files.find(file => file.id === id);
+          if(file) {
+            file.name = newName;
+            return;
+          }
+          const folder = state.folders.find(folder => folder.id === id);
+          if(folder) {
+            folder.name = newName;
+          } 
+        }
+      }
 })
 
-export const { createFile, createFolder, deleteFile, deleteFolder, updateFileContent } = fileSystemSlice.actions;
+export const { createFile, createFolder, deleteFile, deleteFolder, updateFileContent, rename } = fileSystemSlice.actions;
 
 export default fileSystemSlice.reducer

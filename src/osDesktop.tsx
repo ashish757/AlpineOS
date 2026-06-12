@@ -13,6 +13,8 @@ import { BrowserApp } from './apps/BrowserApp';
 import { DesktopIcons } from './UI/DesktopIcons';
 import { SaveDialogApp } from './apps/SaveDialogApp';
 
+import {useContextMenu} from './UI/contextMenuUtils';
+
 const componentMap: Record<string, React.ElementType> = {
   'FINDER_APP': FinderApp,
   'TERMINAL_APP': TerminalApp,
@@ -22,16 +24,27 @@ const componentMap: Record<string, React.ElementType> = {
 };
 
 const OsDesktop: React.FC = () => {
+
   const windows = useSelector((state: RootState) => state.windows.active);
+  const { showMenu } = useContextMenu();
+
+  const handleDesktopContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    showMenu(e.pageX, e.pageY, [
+      { label: 'New Folder', action: () => alert('Create New Folder') },
+      { label: 'Refresh', action: () => alert('Refresh Desktop') },
+      { label: 'Change Wallpaper', action: () => alert('Change Wallpaper') },
+    ]);
+  }
 
   return (
-    <div className="w-screen h-screen relative overflow-hidden flex flex-col">
+    <div className="w-screen h-screen relative overflow-hidden flex flex-col" >
 
       <Wallpaper />     
       <MenuBar />
 
       
-      <main className="flex-1 relative z-10 p-4">
+      <main className="flex-1 relative z-10 p-4" onContextMenu={handleDesktopContextMenu}>
         {windows.map(window => {
           if(window.isOpen) {
             const Component = componentMap[window.componentId];

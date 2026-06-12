@@ -25,6 +25,13 @@ export const Window = memo(({info, children}: WindowProps) => {
     setIsMaximized(prev => !prev);
   };
 
+  // Sync localPos when info position changes externally (or restores)
+  useEffect(() => {
+    if (!isDragging) {
+      setLocalPos({ x: info.x, y: info.y });
+    }
+  }, [info.x, info.y, isDragging]);
+
   const handleDragStart = (e: React.MouseEvent) => {
     if (isMaximized) {
       dispatch(focusApp(info.id));
@@ -64,10 +71,18 @@ export const Window = memo(({info, children}: WindowProps) => {
         setIsDragging(false);
         const deltaX = e.clientX - dragStartRef.current.mouseX;
         const deltaY = e.clientY - dragStartRef.current.mouseY;
+        
+        // Calculate bounded coordinates for saving to Redux
+        const rect = windowRef.current?.getBoundingClientRect();
+        const nextX = dragStartRef.current.winX + deltaX;
+        const nextY = dragStartRef.current.winY + deltaY;
+        const boundedX = rect ? Math.max(0, Math.min(window.innerWidth - rect.width, nextX)) : nextX;
+        const boundedY = rect ? Math.max(0, Math.min(window.innerHeight - rect.height, nextY)) : nextY;
+
         dispatch(moveWindow({
           id: info.id,
-          x: dragStartRef.current.winX + deltaX,
-          y: dragStartRef.current.winY + deltaY,
+          x: boundedX,
+          y: boundedY,
         }));
       }
     };
@@ -90,6 +105,12 @@ export const Window = memo(({info, children}: WindowProps) => {
     <div
       ref={windowRef}
       onMouseDown={() => dispatch(focusApp(info.id))}
+      onContextMenu={(e) => {
+        // Prevent desktop context menu from showing when right-clicking inside any window
+        e.stopPropagation();
+        // We do not preventDefault here so that apps can implement their own context menus,
+        // or browser default text-selection menus can appear in Textpad if needed.
+      }}
       style={{
         left: `${localPos.x}px`,
         top: `${localPos.y}px`,
@@ -124,7 +145,10 @@ export const Window = memo(({info, children}: WindowProps) => {
           
           <button
             onMouseDown={(e) => e.stopPropagation()} 
-            onClick={handleToggleMaximize}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleToggleMaximize(e);
+            }}
             className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-400 focus:outline-none flex items-center justify-center group"
             aria-label="Maximize"
           >
