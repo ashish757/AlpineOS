@@ -11,12 +11,14 @@ import { TerminalApp } from './apps/TerminalApp';
 import { TextpadApp } from './apps/TextpadApp';
 import { BrowserApp } from './apps/BrowserApp';
 import { DesktopIcons } from './UI/DesktopIcons';
+import { SaveDialogApp } from './apps/SaveDialogApp';
 
 const componentMap: Record<string, React.ElementType> = {
   'FINDER_APP': FinderApp,
   'TERMINAL_APP': TerminalApp,
   'TEXTPAD_APP': TextpadApp,
   'BROWSER_APP': BrowserApp,
+  'SAVE_DIALOG_APP': SaveDialogApp
 };
 
 const OsDesktop: React.FC = () => {
@@ -27,9 +29,6 @@ const OsDesktop: React.FC = () => {
 
       <Wallpaper />     
       <MenuBar />
-
-
-
 
       
       <main className="flex-1 relative z-10 p-4">

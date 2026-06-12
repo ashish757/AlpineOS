@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
 import { type WindowState, updateWindowTitle } from '../store/windowSlice';
 import { useSelector, useDispatch } from 'react-redux';
-import type { RootState } from '../store/store';
+import type { AppDispatch, RootState } from '../store/store';
 import { updateFileContent } from '../store/fileSystemSlice';
+import { executeProcess } from '../store/processThunk';
 
 export const TextpadApp = ({winInfo} : {winInfo: WindowState}) => {
   const fileId = winInfo.args?.fileId;
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const fileData = useSelector((state: RootState) => state.fileSystem.files.find(file => file.id === fileId));
 
@@ -25,6 +26,8 @@ export const TextpadApp = ({winInfo} : {winInfo: WindowState}) => {
     if(fileId) {
       dispatch(updateFileContent({id: fileId, content}));
       setIsModified(false);
+    } else {
+      dispatch(executeProcess('saveDialog', { callerWinId: winInfo.id, contentToSave: content }));
     }
   }
 

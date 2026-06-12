@@ -68,9 +68,15 @@ export const windowSlice = createSlice({
         win.title = action.payload.title
       }
     },
+    updateWindowArgs: (state, action: PayloadAction<{ id: string; args: Record<string, string> }>) => {
+      const win = state.active.find(w => w.id === action.payload.id);
+      if (win) {
+        win.args = { ...win.args, ...action.payload.args };
+      }
+    }
   },
 });
 
-export const { closeWindow, createWindow, focusApp, moveWindow, updateWindowTitle } = windowSlice.actions;
+export const { closeWindow, createWindow, focusApp, moveWindow, updateWindowTitle, updateWindowArgs } = windowSlice.actions;
 
 export default windowSlice.reducer;

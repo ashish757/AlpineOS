@@ -37,6 +37,13 @@ export const processRegistry: ProcessRegistry = {
         reqWindow: true,
         title: 'Browser',
         componentId: 'BROWSER_APP',
-    }  
+    },
+    saveDialog: {
+        id: 'saveDialog',
+        icon: '/icons/savedialog.png',
+        reqWindow: true,
+        title: 'Save File',
+        componentId: 'SAVE_DIALOG_APP',
+    }
    
 }
