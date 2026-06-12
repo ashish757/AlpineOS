@@ -66,19 +66,36 @@ export const initialState: FileSystemState = {
   ],
   folders: [
     { id: 'root', name: '/', parentId: '' },
+
+     { id: 'app', name: 'Application', parentId: 'root' },
+    { id: 'lib', name: 'Library', parentId: 'root' },
+    { id: 'sys', name: 'System', parentId: 'root' },
+    { id: 'lib2', name: 'Library', parentId: 'sys' },
+    { id: 'vol', name: 'Volumnes', parentId: 'sys' },
+    { id: 'usr', name: 'Users', parentId: 'root' },
+
+    { id: 'sh', name: 'shared', parentId: 'usr' },
+    { id: 'usrAcc', name: 'User', parentId: 'usr' },
+    { id: 'desk', name: 'Desktop', parentId: 'usrAcc' },
+    { id: 'dw', name: 'Downloads', parentId: 'usrAcc' },
+    { id: 'dc', name: 'Documents', parentId: 'usrAcc' },
+    { id: 'lib3', name: 'Library', parentId: 'usrAcc' },
+    { id: 'mov', name: 'Movies', parentId: 'usrAcc' },
+     { id: 'mus', name: 'Music', parentId: 'usrAcc' },
+      { id: 'pub', name: 'Public', parentId: 'usrAcc' },
+       { id: 'pic', name: 'Pictures', parentId: 'usrAcc' },
+
+
+
     { id: 'bn', name: 'bin', parentId: 'root' },
     { id: 'et', name: 'etc', parentId: 'root' },
     { id: 'hm', name: 'home', parentId: 'root' },
-    { id: 'us', name: 'usr', parentId: 'root' },
     { id: 'vr', name: 'var', parentId: 'root' },
     { id: 'op', name: 'opt', parentId: 'root' },
     { id: 'tm', name: 'tmp', parentId: 'root' },
     { id: 'lg', name: 'log', parentId: 'vr' },
-    { id: 'lb', name: 'lib', parentId: 'us' },
-    { id: 'sh', name: 'share', parentId: 'us' },
     { id: 'uh', name: '~', parentId: 'hm' },
-    { id: 'dc', name: 'documents', parentId: 'uh' },
-    { id: 'dw', name: 'downloads', parentId: 'uh' },
+ 
     { id: 'cf', name: '.config', parentId: 'uh' }
   ]
 };

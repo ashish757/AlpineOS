@@ -30,6 +30,13 @@ export const processRegistry: ProcessRegistry = {
         reqWindow: true,
         title: 'Textpad',
         componentId: 'TEXTPAD_APP',
-    }
+    },
+    browser: {
+        id: 'browser',
+        icon: '/icons/browser.png',
+        reqWindow: true,
+        title: 'Browser',
+        componentId: 'BROWSER_APP',
+    }  
    
 }

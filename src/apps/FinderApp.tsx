@@ -155,14 +155,14 @@ export const FinderApp = () => {
           </div>
         </div>
 
-        <div className="flex flex-1 flex-col bg-[#1e1e1e]" style={{ justifyContent: 'space-between' }}>
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(72px,1fr))] gap-2">
+        <div className="flex flex-1 flex-col bg-[#1e1e1e] pt-1 pl-1 " style={{ justifyContent: 'space-between' }}>
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(80px,1fr))] gap-2">
             {currentFolderContents.folders.map((fItem) => (
               <div
                 key={fItem.id}
                 onClick={(e) => handleItemSelect(e, fItem.id)}
                 onDoubleClick={(e) => { e.stopPropagation(); openFolder(fItem.id); }}
-                className={`group flex cursor-pointer flex-col items-center gap-2 rounded-lg p-2 border border-transparent transition-all ${selectedIds.includes(fItem.id) ? "bg-white/10 border-white/20" : "hover:bg-white/5"
+                className={`group flex cursor-pointer flex-col items-center gap-2 rounded-lg border border-transparent transition-all ${selectedIds.includes(fItem.id) ? "bg-white/10 border-white/20" : "hover:bg-white/5"
                   }`}
               >
                 <svg className="h-12 w-12 text-blue-400 drop-shadow-sm transition-transform group-active:scale-95" fill="currentColor" viewBox="0 0 20 20">
@@ -178,7 +178,7 @@ export const FinderApp = () => {
               <div
                 key={fItem.id}
                 onClick={(e) => handleItemSelect(e, fItem.id)}
-                className={`group flex cursor-pointer flex-col items-center gap-2 rounded-lg p-2 border border-transparent transition-all ${selectedIds.includes(fItem.id) ? "bg-white/10 border-white/20" : "hover:bg-white/5"
+                className={`group flex cursor-pointer flex-col items-center gap-2 rounded-lg border border-transparent transition-all ${selectedIds.includes(fItem.id) ? "bg-white/10 border-white/20" : "hover:bg-white/5"
                   }`}
               >
                 <div className="relative flex h-12 w-12 items-center justify-center text-slate-300 drop-shadow-sm transition-transform group-active:scale-95">

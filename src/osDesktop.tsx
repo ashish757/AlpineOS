@@ -9,11 +9,14 @@ import MenuBar from './UI/MenuBar';
 import { FinderApp } from './apps/FinderApp';
 import { TerminalApp } from './apps/TerminalApp';
 import { TextpadApp } from './apps/TextpadApp';
+import { BrowserApp } from './apps/BrowserApp';
+import { DesktopIcons } from './UI/DesktopIcons';
 
 const componentMap: Record<string, React.ElementType> = {
   'FINDER_APP': FinderApp,
   'TERMINAL_APP': TerminalApp,
   'TEXTPAD_APP': TextpadApp,
+  'BROWSER_APP': BrowserApp,
 };
 
 const OsDesktop: React.FC = () => {
@@ -21,8 +24,13 @@ const OsDesktop: React.FC = () => {
 
   return (
     <div className="w-screen h-screen relative overflow-hidden flex flex-col">
+      <DesktopIcons />
+
       <Wallpaper />     
       <MenuBar />
+
+
+
       
       <main className="flex-1 relative z-10 p-4">
         {windows.map(window => {

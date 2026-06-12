@@ -6,6 +6,7 @@ const Dock = () => {
     const dispatch = useDispatch<AppDispatch>();
 
     const apps = [
+        { id: 'browser', name: 'Browser', icon: '🌐' },
         { id: 'finder', name: 'Finder', icon: '📁' },
         { id: 'terminal', name: 'Terminal', icon: '💻' },
         { id: 'textpad', name: 'Textpad', icon: '📝' },
