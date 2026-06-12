@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { type RootState } from '../store/store';
 import { createFolder, createFile } from '../store/fileSystemSlice';
 
-export const FinderApp = ({ windowId }: { windowId?: string }) => {
+export const FinderApp =  () => {
   const dispatchAction = useDispatch();
   const fileSystemState = useSelector((state: RootState) => state.fileSystem);
 
