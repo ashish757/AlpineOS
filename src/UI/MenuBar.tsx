@@ -43,7 +43,7 @@ export default function MenuBar() {
       
       <div className="flex items-center gap-4">
         <div className="font-bold cursor-default hover:bg-white/10 px-2 py-1 rounded transition-colors flex items-center gap-2">
-          <span></span> {activeAppName}
+           {activeAppName}
         </div>
         {Object.keys(menuConfigToRender).map((menuName) => (
           <div 
