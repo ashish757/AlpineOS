@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import DailyWallpaper from '../assets/default-wallpaper.jpg';
 
 export const useDailyWallpaper = () => {
   const [bgUrl, setBg] = useState<string | null>(null);
@@ -32,7 +33,8 @@ export const useDailyWallpaper = () => {
 
         setBg(newBg);
         setErr(false);
-      } catch (err) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (_err) {
         setErr(true);
         if (saveBG) setBg(saveBG);
       } finally {
@@ -45,7 +47,7 @@ export const useDailyWallpaper = () => {
 
   if (!apiKey) {
     console.error("NASA API key is not set");
-    return { bgUrl: './assets/default-wallpaper.jpg', isLoading: false, isErr: false };
+    return { bgUrl: DailyWallpaper, isLoading: false, isErr: true };
   }
   return { bgUrl, isLoading, isErr };
 };
