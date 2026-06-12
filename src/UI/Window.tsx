@@ -14,6 +14,7 @@ export const Window = memo(({info, children}: WindowProps) => {
 
   const [localPos, setLocalPos] = useState({ x: info.x, y: info.y });
   const [isDragging, setIsDragging] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
   
   const dragStartRef = useRef({ mouseX: 0, mouseY: 0, winX: 0, winY: 0 });
 
@@ -23,7 +24,17 @@ export const Window = memo(({info, children}: WindowProps) => {
     }
   }, [info.x, info.y, isDragging]);
 
+  const handleToggleMaximize = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    dispatch(focusApp(info.id)); 
+    setIsMaximized(prev => !prev);
+  };
+
   const handleDragStart = (e: React.MouseEvent) => {
+    if (isMaximized) {
+      dispatch(focusApp(info.id));
+      return;
+    }
     e.stopPropagation(); 
     dispatch(focusApp(info.id));
     setIsDragging(true);
@@ -37,7 +48,7 @@ export const Window = memo(({info, children}: WindowProps) => {
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (isDragging) {
+      if (isDragging && !isMaximized) {
         const deltaX = e.clientX - dragStartRef.current.mouseX;
         const deltaY = e.clientY - dragStartRef.current.mouseY;
         setLocalPos({
@@ -72,7 +83,7 @@ export const Window = memo(({info, children}: WindowProps) => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
     };
-  }, [isDragging, info.id, dispatch]);
+  }, [isDragging, isMaximized, info.id, dispatch]);
 
   return (
     <div
@@ -83,29 +94,45 @@ export const Window = memo(({info, children}: WindowProps) => {
         top: `${localPos.y}px`,
         zIndex: info.index,
       }}
-      className="absolute w-[600px] h-[400px] flex flex-col bg-slate-900/95 backdrop-blur-md border border-slate-700 rounded-lg shadow-2xl overflow-hidden ring-1 ring-white/10"
+      className={`absolute flex flex-col bg-slate-900/95 backdrop-blur-md border border-slate-700 shadow-2xl overflow-hidden ring-1 ring-white/10 ${
+        isMaximized 
+          ? "rounded-none !w-full !h-full !left-0 !top-0" 
+          : "w-[600px] h-[400px] rounded-lg resize min-w-[300px] min-h-[200px]"
+      }`}
     >
       <div
         onMouseDown={handleDragStart}
+        onDoubleClick={handleToggleMaximize}
         className="bg-slate-800/50 px-4 py-2 flex justify-between items-center select-none cursor-move border-b border-slate-700/50"
       >
         <span className="text-xs tracking-widest font-bold text-slate-300 uppercase">
           {info.title}
         </span>
-        <div className="flex gap-3">
+        <div className="flex gap-2">
           <button
             onMouseDown={(e) => e.stopPropagation()} 
             onClick={(e) => {
               e.stopPropagation(); 
               dispatch(closeWindow(info.id));
             }}
-            className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-400 focus:outline-none"
+            className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-400 focus:outline-none flex items-center justify-center group"
             aria-label="Close"
-          />
+          >
+            <span className="opacity-0 group-hover:opacity-100 text-[8px] text-red-900 leading-none">x</span>
+          </button>
+          
+          <button
+            onMouseDown={(e) => e.stopPropagation()} 
+            onClick={handleToggleMaximize}
+            className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-400 focus:outline-none flex items-center justify-center group"
+            aria-label="Maximize"
+          >
+            <span className="opacity-0 group-hover:opacity-100 text-[8px] text-green-900 leading-none">+</span>
+          </button>
         </div>
       </div>
 
-      <div className="flex-1 p-4 overflow-auto text-slate-100 bg-transparent flex flex-col">
+      <div className="flex-1 overflow-auto text-slate-100 bg-transparent flex flex-col">
         {children}
       </div>
     </div>
