@@ -1,10 +1,13 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
+import { processRegistry } from '../config/processRegistry';
 
 export interface WindowState {
   id: string;
-  isOpen: boolean;
+  isOpen?: boolean;
   title: string,
-  index: number
+  index?: number
+  pId?: string;
+  component: React.ElementType;
 }
 
 export interface Windows {
@@ -13,18 +16,7 @@ export interface Windows {
 }
 
 const initialState: Windows = {
-  active: [
-   {
-    id: '1', isOpen: true, title: "win1", index: 0
-   },
-    {
-    id: '2', isOpen: true, title: "win2", index : 0
-   }
-   ,
-    {
-    id: '3', isOpen: true, title: "win3", index : 0
-   }
-  ],
+  active: [],
   highestIndex: 10
 };
 
@@ -32,7 +24,15 @@ export const windowSlice = createSlice({
   name: 'os',
   initialState,
   reducers: {
-    closeApp: (state, action: PayloadAction<string>) => {
+    createWindow: (state, action: PayloadAction<string>) => {
+      const newWindow: WindowState = {...processRegistry[action.payload].windowInfo,
+        isOpen: true,
+        index: state.highestIndex + 1,
+      };
+      state.active.push(newWindow);
+      state.highestIndex += 1;
+    },
+    closeWindow: (state, action: PayloadAction<string>) => {
       const window = state.active.find((window) => window.id === action.payload);
       if (window) {
         window.isOpen = false;
@@ -50,6 +50,6 @@ export const windowSlice = createSlice({
   },
 });
 
-export const { closeApp, focusApp } = windowSlice.actions;
+export const { closeWindow, createWindow, focusApp } = windowSlice.actions;
 
 export default windowSlice.reducer;

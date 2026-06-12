@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, memo } from "react";
 import { useDispatch } from "react-redux";
-import { closeApp, focusApp } from "../store/windowSlice"; 
+import { closeWindow, focusApp } from "../store/windowSlice"; 
 import type { WindowState } from "../store/windowSlice";
 
 interface WindowProps {
@@ -78,7 +78,7 @@ export const Window = memo(({info}: WindowProps) => {
           <button
             onClick={(e) => {
               e.stopPropagation(); 
-              dispatch(closeApp(info.id));
+              dispatch(closeWindow(info.id));
             }}
             className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-400 focus:outline-none"
             aria-label="Close"
@@ -87,7 +87,7 @@ export const Window = memo(({info}: WindowProps) => {
       </div>
 
       <div className="flex-1 p-4 overflow-auto text-slate-100 bg-transparent">
-        {/* {children} */}
+        {React.createElement(info.component)}
       </div>
     </div>
   );
