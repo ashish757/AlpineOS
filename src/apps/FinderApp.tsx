@@ -1,67 +1,106 @@
-
-import { openFolder, navigateBack, navigateForward, selectItems } from '../store/finderSlice';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { type RootState } from '../store/store';
+import { createFolder, createFile } from '../store/fileSystemSlice';
 
-export const FinderApp = () => {
-    const dispatchAction = useDispatch();
-    const fileSystemState = useSelector((state: RootState) => state.fileSystem);
-    const finderState = useSelector((state: RootState) => state.finder);
+export const FinderApp = ({ windowId }: { windowId?: string }) => {
+  const dispatchAction = useDispatch();
+  const fileSystemState = useSelector((state: RootState) => state.fileSystem);
 
-    const currentFolderContents = {
-    folders: fileSystemState.folders.filter(
-      (folderItem) => folderItem.parentId === finderState.folderId
-    ),
-    files: fileSystemState.files.filter(
-      (fileItem) => fileItem.parentId === finderState.folderId
-    ),
+  const [history, setHistory] = useState<string[]>(['root']);
+  const [position, setPosition] = useState(0);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  
+  const folderId = history[position];
+
+  const currentFolderContents = {
+    folders: fileSystemState.folders.filter((f) => f.parentId === folderId),
+    files: fileSystemState.files.filter((f) => f.parentId === folderId),
   };
 
-  const currentFolderDetails = fileSystemState.folders.find(
-    (folderItem) => folderItem.id === finderState.folderId
-  );
+  const currentFolderDetails = fileSystemState.folders.find((f) => f.id === folderId);
 
- const isBackButtonDisabled = finderState.position === 0;
-  const isForwardButtonDisabled = finderState.position === finderState.history.length - 1;
+  const isBackButtonDisabled = position === 0;
+  const isForwardButtonDisabled = position === history.length - 1;
+
+  const navigateBack = () => {
+    if (position > 0) {
+      setPosition(p => p - 1);
+      setSelectedIds([]);
+    }
+  };
+
+  const navigateForward = () => {
+    if (position < history.length - 1) {
+      setPosition(p => p + 1);
+      setSelectedIds([]);
+    }
+  };
+
+  const openFolder = (id: string) => {
+    setHistory(prev => {
+      const newHistory = prev.slice(0, position + 1);
+      newHistory.push(id);
+      return newHistory;
+    });
+    setPosition(p => p + 1);
+    setSelectedIds([]);
+  };
 
   const handleItemSelection = (mouseEvent: React.MouseEvent, targetItemId: string) => {
     mouseEvent.stopPropagation();
-    
     if (mouseEvent.ctrlKey || mouseEvent.metaKey) {
-      const isItemAlreadySelected = finderState.selectedIds.includes(targetItemId);
-      const updatedSelectionArray = isItemAlreadySelected
-        ? finderState.selectedIds.filter((selectedId) => selectedId !== targetItemId)
-        : [...finderState.selectedIds, targetItemId];
-      
-      dispatchAction(selectItems(updatedSelectionArray));
+      setSelectedIds(prev => prev.includes(targetItemId) 
+        ? prev.filter(id => id !== targetItemId) 
+        : [...prev, targetItemId]
+      );
     } else {
-      dispatchAction(selectItems([targetItemId]));
+      setSelectedIds([targetItemId]);
     }
   };
-    return (
-    <div 
-      className="flex h-full w-full flex-col bg-slate-900 text-slate-200" 
-    >
+
+  const handleNewFolder = () => {
+    const name = prompt('Enter folder name:', 'New Folder');
+    if (name) {
+      dispatchAction(createFolder({
+        id: crypto.randomUUID(),
+        name,
+        parentId: folderId,
+      }));
+    }
+  };
+
+  const handleNewFile = () => {
+    const name = prompt('Enter file name:', 'New File.txt');
+    if (name) {
+      dispatchAction(createFile({
+        id: crypto.randomUUID(),
+        name,
+        parentId: folderId,
+        extension: name.split('.').pop() || '',
+        content: '',
+      }));
+    }
+  };
+
+  return (
+    <div className="flex h-full w-full flex-col bg-slate-900 text-slate-200" onClick={() => setSelectedIds([])}>
       <div className="flex items-center gap-4 border-b border-slate-700 bg-slate-800 px-4 py-2">
         <div className="flex gap-2">
           <button
-            onClick={() => dispatchAction(navigateBack())}
+            onClick={navigateBack}
             disabled={isBackButtonDisabled}
             className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
-              isBackButtonDisabled 
-                ? "text-slate-600 cursor-not-allowed" 
-                : "text-slate-300 hover:bg-slate-700"
+              isBackButtonDisabled ? "text-slate-600 cursor-not-allowed" : "text-slate-300 hover:bg-slate-700"
             }`}
           >
             Back
           </button>
           <button
-            onClick={() => dispatchAction(navigateForward())}
+            onClick={navigateForward}
             disabled={isForwardButtonDisabled}
             className={`rounded px-3 py-1 text-sm font-medium transition-colors ${
-              isForwardButtonDisabled 
-                ? "text-slate-600 cursor-not-allowed" 
-                : "text-slate-300 hover:bg-slate-700"
+              isForwardButtonDisabled ? "text-slate-600 cursor-not-allowed" : "text-slate-300 hover:bg-slate-700"
             }`}
           >
             Forward
@@ -69,6 +108,14 @@ export const FinderApp = () => {
         </div>
         <div className="flex-1 text-sm font-semibold tracking-wide text-slate-300">
           {currentFolderDetails ? currentFolderDetails.name : "Unknown Location"}
+        </div>
+        <div className="flex gap-2">
+           <button onClick={handleNewFolder} className="rounded px-3 py-1 text-sm font-medium transition-colors text-blue-400 hover:bg-slate-700">
+             + Folder
+           </button>
+           <button onClick={handleNewFile} className="rounded px-3 py-1 text-sm font-medium transition-colors text-green-400 hover:bg-slate-700">
+             + File
+           </button>
         </div>
       </div>
 
@@ -78,14 +125,9 @@ export const FinderApp = () => {
             Favorites
           </h3>
           <div
-            onClick={(clickEvent) => {
-              clickEvent.stopPropagation();
-              dispatchAction(openFolder("root"));
-            }}
+            onClick={(e) => { e.stopPropagation(); openFolder("root"); }}
             className={`cursor-pointer rounded px-3 py-2 text-sm transition-colors ${
-              finderState.folderId === "root" 
-                ? "bg-blue-600/30 text-blue-400 font-medium" 
-                : "text-slate-400 hover:bg-slate-700 hover:text-slate-200"
+              folderId === "root" ? "bg-blue-600/30 text-blue-400 font-medium" : "text-slate-400 hover:bg-slate-700 hover:text-slate-200"
             }`}
           >
             Root Directory
@@ -102,15 +144,10 @@ export const FinderApp = () => {
               {currentFolderContents.folders.map((folderItem) => (
                 <div
                   key={folderItem.id}
-                  onClick={(clickEvent) => handleItemSelection(clickEvent, folderItem.id)}
-                  onDoubleClick={(clickEvent) => {
-                    clickEvent.stopPropagation();
-                    dispatchAction(openFolder(folderItem.id));
-                  }}
+                  onClick={(e) => handleItemSelection(e, folderItem.id)}
+                  onDoubleClick={(e) => { e.stopPropagation(); openFolder(folderItem.id); }}
                   className={`group flex cursor-pointer flex-col items-center rounded-lg p-3 transition-all ${
-                    finderState.selectedIds.includes(folderItem.id) 
-                      ? "bg-blue-600/40 ring-1 ring-blue-500" 
-                      : "hover:bg-slate-700/50"
+                    selectedIds.includes(folderItem.id) ? "bg-blue-600/40 ring-1 ring-blue-500" : "hover:bg-slate-700/50"
                   }`}
                 >
                   <div className="mb-2 text-blue-400 drop-shadow-md">
@@ -127,11 +164,9 @@ export const FinderApp = () => {
               {currentFolderContents.files.map((fileItem) => (
                 <div
                   key={fileItem.id}
-                  onClick={(clickEvent) => handleItemSelection(clickEvent, fileItem.id)}
+                  onClick={(e) => handleItemSelection(e, fileItem.id)}
                   className={`group flex cursor-pointer flex-col items-center rounded-lg p-3 transition-all ${
-                    finderState.selectedIds.includes(fileItem.id) 
-                      ? "bg-blue-600/40 ring-1 ring-blue-500" 
-                      : "hover:bg-slate-700/50"
+                    selectedIds.includes(fileItem.id) ? "bg-blue-600/40 ring-1 ring-blue-500" : "hover:bg-slate-700/50"
                   }`}
                 >
                   <div className="mb-2 text-slate-400 drop-shadow-md transition-colors group-hover:text-slate-300">

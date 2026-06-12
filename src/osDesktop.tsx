@@ -6,36 +6,37 @@ import Wallpaper from './UI/Wallpaper';
 import { Window } from './UI/Window';
 import MenuBar from './UI/MenuBar';
 
+import { FinderApp } from './apps/FinderApp';
+import { TerminalApp } from './apps/TerminalApp';
+import { TextpadApp } from './apps/TextpadApp';
+
+const componentMap: Record<string, React.ElementType> = {
+  'FINDER_APP': FinderApp,
+  'TERMINAL_APP': TerminalApp,
+  'TEXTPAD_APP': TextpadApp,
+};
+
 const OsDesktop: React.FC = () => {
-  const processes = useSelector((state: RootState) => state.processes.active);
-  // keeping context menu for development 
-  // useEffect(() => {
-  //   const handleContextMenu = (e: MouseEvent) => {
-  //     e.preventDefault();
-  //   };
-  //   document.addEventListener('contextmenu', handleContextMenu);
-  //   return () => {
-  //     document.removeEventListener('contextmenu', handleContextMenu);
-  //   };
-  // }, []);
+  const windows = useSelector((state: RootState) => state.windows.active);
 
   return (
     <div className="w-screen h-screen relative overflow-hidden flex flex-col">
-
       <Wallpaper />     
-
       <MenuBar />
       
       <main className="flex-1 relative z-10 p-4">
-        {processes.map(process => {
-          if(process.isRunning && process.reqWindow && process.windowInfo) {
-            return( <Window key={process.windowInfo.id} info={process.windowInfo}/>);
+        {windows.map(window => {
+          if(window.isOpen) {
+            const Component = componentMap[window.componentId];
+            return (
+              <Window key={window.id} info={window}>
+                {Component ? <Component windowId={window.id} /> : <div>Component Not Found</div>}
+              </Window>
+            );
           }
           return null;
         })}
-
       </main>
-
 
       <Dock />
     </div>
