@@ -19,18 +19,69 @@ export interface FileSystemState {
     folders: VirtualFolder[],
 }
 
-const initialState: FileSystemState = {
-    files: [],
-    folders: [
-        {
-        id: 'root',
-        name: '~',
-        parentId: '',
-
-        }
-
-    ]
-}
+export const initialState: FileSystemState = {
+  files: [
+    {
+      id: 'f1',
+      name: 'passwd',
+      parentId: 'et',
+      extension: '',
+      content: 'root:x:0:0:root:/root:/bin/bash\nusr:x:1000:1000:usr:/home/usr:/bin/bash'
+    },
+    {
+      id: 'f2',
+      name: 'hosts',
+      parentId: 'et',
+      extension: '',
+      content: '127.0.0.1 localhost'
+    },
+    {
+      id: 'f3',
+      name: 'profile',
+      parentId: 'et',
+      extension: '',
+      content: 'export PATH=$PATH:/usr/local/bin'
+    },
+    {
+      id: 'f4',
+      name: '.bashrc',
+      parentId: 'uh',
+      extension: '',
+      content: 'alias ll="ls -alF"\nalias update="sudo apt update"'
+    },
+    {
+      id: 'f5',
+      name: 'sysLog',
+      parentId: 'lg',
+      extension: 'log',
+      content: 'sys boot ok\nnet init ok'
+    },
+    {
+      id: 'f6',
+      name: 'readme',
+      parentId: 'dc',
+      extension: 'md',
+      content: '# sys init\nusr dir setup complete.'
+    }
+  ],
+  folders: [
+    { id: 'rt', name: '/', parentId: '' },
+    { id: 'bn', name: 'bin', parentId: 'rt' },
+    { id: 'et', name: 'etc', parentId: 'rt' },
+    { id: 'hm', name: 'home', parentId: 'rt' },
+    { id: 'us', name: 'usr', parentId: 'rt' },
+    { id: 'vr', name: 'var', parentId: 'rt' },
+    { id: 'op', name: 'opt', parentId: 'rt' },
+    { id: 'tm', name: 'tmp', parentId: 'rt' },
+    { id: 'lg', name: 'log', parentId: 'vr' },
+    { id: 'lb', name: 'lib', parentId: 'us' },
+    { id: 'sh', name: 'share', parentId: 'us' },
+    { id: 'uh', name: '~', parentId: 'hm' },
+    { id: 'dc', name: 'documents', parentId: 'uh' },
+    { id: 'dw', name: 'downloads', parentId: 'uh' },
+    { id: 'cf', name: '.config', parentId: 'uh' }
+  ]
+};
 
 export const fileSystemSlice = createSlice({
     name: 'fs',

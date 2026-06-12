@@ -7,7 +7,7 @@ export const FinderApp =  () => {
   const dispatchAction = useDispatch();
   const fileSystemState = useSelector((state: RootState) => state.fileSystem);
 
-  const [history, setHistory] = useState<string[]>(['root']);
+  const [history, setHistory] = useState<string[]>(['rt']);
   const [position, setPosition] = useState(0);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   

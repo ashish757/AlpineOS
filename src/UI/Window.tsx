@@ -18,11 +18,6 @@ export const Window = memo(({info, children}: WindowProps) => {
   
   const dragStartRef = useRef({ mouseX: 0, mouseY: 0, winX: 0, winY: 0 });
 
-  useEffect(() => {
-    if (!isDragging) {
-      setLocalPos({ x: info.x, y: info.y });
-    }
-  }, [info.x, info.y, isDragging]);
 
   const handleToggleMaximize = (e?: React.MouseEvent) => {
     e?.stopPropagation();
@@ -48,12 +43,18 @@ export const Window = memo(({info, children}: WindowProps) => {
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (isDragging && !isMaximized) {
+      if (windowRef.current && isDragging && !isMaximized) {
         const deltaX = e.clientX - dragStartRef.current.mouseX;
         const deltaY = e.clientY - dragStartRef.current.mouseY;
+        const rect = windowRef.current.getBoundingClientRect();
+        const nextX = dragStartRef.current.winX + deltaX;
+        const nextY = dragStartRef.current.winY + deltaY;
+
+        const boundedX = Math.max(0, Math.min(window.innerWidth - rect.width, nextX));
+        const boundedY = Math.max(0, Math.min(window.innerHeight - rect.height, nextY));
         setLocalPos({
-          x: dragStartRef.current.winX + deltaX,
-          y: dragStartRef.current.winY + deltaY,
+          x: boundedX,
+          y: boundedY,
         });
       }
     };
@@ -103,7 +104,7 @@ export const Window = memo(({info, children}: WindowProps) => {
       <div
         onMouseDown={handleDragStart}
         onDoubleClick={handleToggleMaximize}
-        className="bg-slate-800/50 px-4 py-2 flex justify-between items-center select-none cursor-move border-b border-slate-700/50"
+        className="bg-slate-800/50 px-4 py-2 flex justify-between items-center select-none cursor-pointer border-b border-slate-700/50"
       >
         <span className="text-xs tracking-widest font-bold text-slate-300 uppercase">
           {info.title}
