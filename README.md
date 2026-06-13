@@ -78,3 +78,13 @@ This is for my webOS1, for webOS2 i will be going way farrr
 you are all set on http://localhost:5173
 please let me know if anything breaks
 ashishrajsingh75@gmail.com
+
+
+
+# Acknowledgement
+- use a subreddit r/wallpaper for most of the wallpapers featured in this project
+
+# AI
+- used AI to learn about real OS architectures, like how to solve the window positining? got to know how apple uses bounded cascade for positioning windows, 
+- used AI to for quickly genrating eneric and reusable UI components, such as.
+- took help from AI, and my collage friend to fix bugs, like closing window was not quiting the process itslef, window positioning problem and its algorithm
