@@ -1,55 +1,197 @@
-import { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import type { RootState } from '../store/store'
+import { createFolder, createFile } from '../store/fileSystemSlice'
+import type { WindowState } from '../store/windowSlice'
 
-export const TerminalApp = () => {
-  const [history, setHistory] = useState<string[]>(['Welcome to AlpineOS Terminal v1.0.0', 'Type "help" for a list of available commands.']);
-  const [input, setInput] = useState('');
+export const TerminalApp = ({ winInfo }: { winInfo: WindowState }) => {
+  const dispatch = useDispatch()
+  const fileSystemState = useSelector((state: RootState) => state.fileSystem)
+  const { files, folders } = fileSystemState
+
+  const [currentFolderId, setCurrentFolderId] = useState('root')
+  const [history, setHistory] = useState<string[]>([])
+  const [commandHistory, setCommandHistory] = useState<string[]>([])
+  const [historyIndex, setHistoryIndex] = useState(-1)
+  const [input, setInput] = useState('')
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+    }
+  }, [history])
+
+  const getPath = (folderId: string) => {
+    let currentId = folderId
+    const pathParts: string[] = []
+    let depthGuard = 50
+    while (currentId && depthGuard > 0) {
+      const folder = folders.find((f) => f.id === currentId)
+      if (!folder) break
+      if (folder.name !== '/' && folder.name.toLowerCase() !== 'root') {
+        pathParts.unshift(folder.name)
+      }
+      currentId = folder.parentId
+      depthGuard--
+    }
+    return '/' + pathParts.join('/')
+  }
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      const cmd = input.trim();
-      let response = '';
-
-      if (cmd === 'help') {
-        response = 'Available commands: help, echo, clear, date, whoami';
-      } else if (cmd === 'clear') {
-        setHistory([]);
-        setInput('');
-        return;
-      } else if (cmd.startsWith('echo ')) {
-        response = cmd.substring(5);
-      } else if (cmd === 'date') {
-        response = new Date().toString();
-      } else if (cmd === 'whoami') {
-        response = 'alpine_user';
-      } else if (cmd !== '') {
-        response = `Command not found: ${cmd}`;
+      const cmd = input.trim()
+      const newCommandHistory = [...commandHistory, cmd]
+      setCommandHistory(newCommandHistory)
+      setHistoryIndex(newCommandHistory.length)
+      
+      const newHistory = [...history, `user@webos:~$ ${cmd}`]
+      
+      if (cmd === '') {
+        setHistory(newHistory)
+        setInput('')
+        return
       }
 
-      setHistory((prev) => [...prev, `user@alpine:~$ ${cmd}`, ...(response ? [response] : [])]);
-      setInput('');
+      const args = cmd.split(' ')
+      const command = args[0]
+      const target = args.slice(1).join(' ')
+      let output = ''
+
+      if (command === 'pwd') {
+        output = getPath(currentFolderId)
+      } else if (command === 'ls') {
+        const folderNames = folders
+          .filter((f) => f.parentId === currentFolderId)
+          .map((f) => f.name + '/')
+        const fileNames = files
+          .filter((f) => f.parentId === currentFolderId)
+          .map((f) => f.name + (f.extension ? '.' + f.extension : ''))
+        output = [...folderNames, ...fileNames].join('  ')
+      } else if (command === 'cd') {
+        if (!target) {
+          setCurrentFolderId('root')
+        } else if (target === '..') {
+          const currentFolder = folders.find((f) => f.id === currentFolderId)
+          if (currentFolder && currentFolder.parentId) {
+            setCurrentFolderId(currentFolder.parentId)
+          }
+        } else {
+          const targetFolder = folders.find(
+            (f) => f.parentId === currentFolderId && f.name === target
+          )
+          if (targetFolder) {
+            setCurrentFolderId(targetFolder.id)
+          } else {
+            output = `cd: ${target}: No such file or directory`
+          }
+        }
+      } else if (command === 'mkdir') {
+        if (!target) {
+          output = 'mkdir: missing operand'
+        } else {
+          dispatch(
+            createFolder({
+              id: crypto.randomUUID(),
+              name: target,
+              parentId: currentFolderId,
+            })
+          )
+        }
+      } 
+      else if (command === 'whoami') {
+        output = 'user'
+      } 
+      else if (command === 'help') {
+        output = `Supported commands:
+              - whoami: Show current user
+              - pwd: Show current directory
+              - ls: List files and folders
+              - cd [dir]: Change directory
+              - mkdir [name]: Create a new folder
+              - touch [name]: Create a new file
+              - echo [text]: Print text to the terminal
+              - clear: Clear the terminal history
+              - mkdir: Create Folder
+              - rm: Remove files and folders
+              `  
+
+      } else if (command === 'touch') {
+        if (!target) {
+          output = 'touch: missing file operand'
+        } else {
+          const parts = target.split('.')
+          const ext = parts.length > 1 ? parts.pop() || '' : ''
+          const name = parts.join('.')
+          dispatch(
+            createFile({
+              id: crypto.randomUUID(),
+              name,
+              extension: ext,
+              parentId: currentFolderId,
+              content: '',
+            })
+          )
+        }
+      } else if (command === 'clear') {
+        setHistory([])
+        setInput('')
+        return
+      } else if (command === 'echo') {
+        output = target
+      } else {
+        output = `Command not found: ${command}`
+      }
+
+      if (output) {
+        newHistory.push(output)
+      }
+      
+      setHistory(newHistory)
+      setInput('')
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      if (historyIndex > 0) {
+        const newIndex = historyIndex - 1
+        setHistoryIndex(newIndex)
+        setInput(commandHistory[newIndex])
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      if (historyIndex < commandHistory.length - 1) {
+        const newIndex = historyIndex + 1
+        setHistoryIndex(newIndex)
+        setInput(commandHistory[newIndex])
+      } else {
+        setHistoryIndex(commandHistory.length)
+        setInput('')
+      }
     }
-  };
+  }
 
   return (
-    <div className="flex flex-col h-full bg-black text-green-400 p-2 font-mono text-sm overflow-hidden">
-      <div className="flex-1 overflow-y-auto">
-        {history.map((line, index) => (
-          <div key={index} className="whitespace-pre-wrap">{line}</div>
+    <div className="flex h-full w-full flex-col bg-black p-4 font-mono text-sm text-green-400 overflow-hidden" onClick={() => document.getElementById(`term-input-${winInfo.id}`)?.focus()}>
+      <div ref={scrollRef} className="flex-1 overflow-y-auto whitespace-pre-wrap pb-2">
+        {history.map((line, idx) => (
+          <div key={idx} className="min-h-[1.25rem] break-all">{line}</div>
         ))}
-      </div>
-      <div className="flex mt-2">
-        <span className="mr-2">user@alpine:~$</span>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="flex-1 bg-transparent outline-none border-none text-green-400"
-          autoFocus
-        />
+        <div className="flex">
+          <span className="mr-2 text-green-400">user@webos:~$</span>
+          <input
+            id={`term-input-${winInfo.id}`}
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="flex-1 bg-transparent text-green-400 outline-none border-none caret-green-400"
+            autoComplete="off"
+            spellCheck="false"
+            autoFocus
+          />
+        </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default TerminalApp;
+export default TerminalApp

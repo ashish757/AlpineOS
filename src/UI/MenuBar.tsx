@@ -21,12 +21,7 @@ export default function MenuBar() {
   const activeAppName = activeWindow ? activeWindow.title : 'Finder';
   const activeMenuConfig = activeWindow ? menusByWindowId[activeWindow.id] : undefined;
 
-  const menuConfigToRender = activeMenuConfig || {
-    File: [],
-    Edit: [],
-    View: [],
-    Help: []
-  };
+  const menuConfigToRender = activeMenuConfig || {};
 
   const handleMenuClick = (e: React.MouseEvent, menuName: string) => {
     e.stopPropagation();

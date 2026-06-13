@@ -36,10 +36,15 @@ export const processSlice = createSlice({
     },
     removeProcess: (state, action: PayloadAction<string>) => {
       state.active = state.active.filter(process => process.id !== action.payload);
-    }
+    },
+    closeAllProcesses: (state) => {
+      state.active.forEach(process => {
+        process.isRunning = false;
+      });
+    },
   },
 });
 
-export const { removeProcess, addProcess } = processSlice.actions;
+export const { removeProcess, addProcess, closeAllProcesses } = processSlice.actions;
 
 export default processSlice.reducer;

@@ -37,7 +37,7 @@ export const DesktopIcons = () => {
   ]);
 
     return (
-        <div className="absolute top-16 right-4 z-10 flex flex-col gap-4">
+        <div className="absolute top-16 right-4 z-0 flex flex-col gap-4">
             {
                 folders.map(folder => folder.parentId === "desk" && (
                     <button 

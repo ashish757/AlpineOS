@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import windowReducer from './windowSlice';
 import { fileSystemSlice } from './fileSystemSlice';
 import { processSlice } from './processSlice';
+import { systemSlice} from './systemSlice';
 
 import {persistStore, persistReducer} from 'redux-persist'
 import lf from 'localforage'
@@ -17,7 +18,8 @@ export const store = configureStore({
   reducer: {
     windows: windowReducer,
     fileSystem: persistedFsReducer,
-    processes: processSlice.reducer
+    processes: processSlice.reducer,
+    system: systemSlice.reducer,
   },
   middleware: (a) => a({serializableCheck: false})
 });

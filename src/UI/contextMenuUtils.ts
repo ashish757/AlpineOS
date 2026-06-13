@@ -21,7 +21,6 @@ export const useContextMenu = () => {
   return context;
 };
 
-// Helper hook to easily attach context menus to any element
 export const useContextMenuTrigger = () => {
   const { showMenu } = useContextMenu();
   
@@ -33,3 +32,6 @@ export const useContextMenuTrigger = () => {
     }
   });
 };
+
+
+

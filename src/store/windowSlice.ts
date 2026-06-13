@@ -73,10 +73,15 @@ export const windowSlice = createSlice({
       if (win) {
         win.args = { ...win.args, ...action.payload.args };
       }
-    }
+    },
+    closeAllWindows: (state) => {
+      state.active.forEach(window => {
+        window.isOpen = false;
+      });
+    },
   },
 });
 
-export const { closeWindow, createWindow, focusApp, moveWindow, updateWindowTitle, updateWindowArgs } = windowSlice.actions;
+export const { closeAllWindows, closeWindow, createWindow, focusApp, moveWindow, updateWindowTitle, updateWindowArgs } = windowSlice.actions;
 
 export default windowSlice.reducer;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import type {RootState} from './store/store'
 import Dock from './UI/Dock';
 import Wallpaper from './UI/Wallpaper';
@@ -14,6 +14,9 @@ import { DesktopIcons } from './UI/DesktopIcons';
 import { SaveDialogApp } from './apps/SaveDialogApp';
 
 import {useContextMenu} from './UI/contextMenuUtils';
+import { closeAllProcesses } from './store/processSlice';
+import { closeAllWindows } from './store/windowSlice';
+import { setPowerState } from './store/systemSlice';
 
 const componentMap: Record<string, React.ElementType> = {
   'FINDER_APP': FinderApp,
@@ -27,6 +30,14 @@ const OsDesktop: React.FC = () => {
 
   const windows = useSelector((state: RootState) => state.windows.active);
   const { showMenu } = useContextMenu();
+  const dispatch = useDispatch();
+
+  const handleShutdown = () => {
+    dispatch(closeAllProcesses());
+    dispatch(closeAllWindows());
+
+    dispatch(setPowerState('OFF'));
+  }
 
   const handleDesktopContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -34,6 +45,7 @@ const OsDesktop: React.FC = () => {
       { label: 'New Folder', action: () => alert('Create New Folder') },
       { label: 'Refresh', action: () => alert('Refresh Desktop') },
       { label: 'Change Wallpaper', action: () => alert('Change Wallpaper') },
+       { label: 'Shutdown', action: () => handleShutdown() },
     ]);
   }
 
@@ -43,8 +55,9 @@ const OsDesktop: React.FC = () => {
       <Wallpaper />     
       <MenuBar />
 
-      
-      <main className="flex-1 relative z-10 p-4" onContextMenu={handleDesktopContextMenu}>
+
+      <main className="flex-1 relative z-0 p-4" onContextMenu={handleDesktopContextMenu}>
+        <DesktopIcons />
         {windows.map(window => {
           if(window.isOpen) {
             const Component = componentMap[window.componentId];
@@ -57,8 +70,8 @@ const OsDesktop: React.FC = () => {
           return null;
         })}
       </main>
+
       
-      <DesktopIcons />
 
 
       <Dock />
