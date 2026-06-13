@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import type {RootState} from './store/store'
+import type {AppDispatch, RootState} from './store/store'
 import Dock from './UI/Dock';
 import Wallpaper from './UI/Wallpaper';
 import { Window } from './UI/Window';
@@ -18,6 +18,8 @@ import { closeAllProcesses } from './store/processSlice';
 import { closeAllWindows } from './store/windowSlice';
 import { setPowerState } from './store/systemSlice';
 import { ActivityManagerApp } from './apps/ActivityManagerApp';
+import { PersonalizationApp } from './apps/PersonalizationApp';
+import { executeProcess } from './store/processThunk';
 
 const componentMap: Record<string, React.ElementType> = {
   'FINDER_APP': FinderApp,
@@ -25,20 +27,24 @@ const componentMap: Record<string, React.ElementType> = {
   'TEXTPAD_APP': TextpadApp,
   'BROWSER_APP': BrowserApp,
   'SAVE_DIALOG_APP': SaveDialogApp,
-'ACTIVITY_MANAGER_APP': ActivityManagerApp
+  'ACTIVITY_MANAGER_APP': ActivityManagerApp,
+  'PERSONALIZATION_APP': PersonalizationApp,
 };
 
 const OsDesktop: React.FC = () => {
 
   const windows = useSelector((state: RootState) => state.windows.active);
   const { showMenu } = useContextMenu();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleShutdown = () => {
     dispatch(closeAllProcesses());
     dispatch(closeAllWindows());
-
     dispatch(setPowerState('OFF'));
+  }
+
+  const handlePersonalize = () => {
+    dispatch(executeProcess('personalization'));
   }
 
   const handleDesktopContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -46,8 +52,8 @@ const OsDesktop: React.FC = () => {
     showMenu(e.pageX, e.pageY, [
       { label: 'New Folder', action: () => alert('Create New Folder') },
       { label: 'Refresh', action: () => alert('Refresh Desktop') },
-      { label: 'Change Wallpaper', action: () => alert('Change Wallpaper') },
-       { label: 'Shutdown', action: () => handleShutdown() },
+      { label: 'Personalize', action: handlePersonalize },
+      { label: 'Shutdown', action: handleShutdown},
     ]);
   }
 

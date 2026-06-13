@@ -51,6 +51,13 @@ export const processRegistry: ProcessRegistry = {
         reqWindow: true,
         title: 'Activity Manager',
         componentId: 'ACTIVITY_MANAGER_APP',
+    },
+    personalization: {
+        id: 'personalization',
+        icon: '/icons/personalization.png',
+        reqWindow: true,
+        title: 'Personalization',
+        componentId: 'PERSONALIZATION_APP',
     }
    
 }

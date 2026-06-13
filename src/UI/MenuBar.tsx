@@ -18,7 +18,7 @@ export default function MenuBar() {
     .filter(w => w.isOpen)
     .sort((a, b) => b.index - a.index)[0];
   
-  const activeAppName = activeWindow ? activeWindow.title : 'Finder';
+  const activeAppName = activeWindow ? activeWindow.title : 'AlpineOS';
   const activeMenuConfig = activeWindow ? menusByWindowId[activeWindow.id] : undefined;
 
   const menuConfigToRender = activeMenuConfig || {};
@@ -28,7 +28,6 @@ export default function MenuBar() {
     const items = menuConfigToRender[menuName];
     if (items && items.length > 0) {
       const rect = e.currentTarget.getBoundingClientRect();
-      // Show menu directly beneath the button
       showMenu(rect.left, rect.bottom + 2, items);
     }
   };
