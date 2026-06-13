@@ -11,6 +11,13 @@ What do you want?
 
 **Contact Me** ashishrajsingh75@gmail.com
 
+# Befroe Details here is the list of Things you can do in AlpineOS
+- Create Text files and folders
+- use Terminal to create file ```touch``` and folders ```mkdir```, change directory ```cd```, delete with ```rmdir```, more commands ```ls```, ```pwd```, ```whoami```, ```help```
+- Use Activity App to see all the currenlty running processes
+- Browser - allows to visit wesite that do not block iframe requests like wikipedia
+- Finder - File manager can do all the basic File management taks - CRUD
+- TextPad - allows creation and updation of text files
 
 ---
 
@@ -49,6 +56,15 @@ What do you want?
 * **Styling:** Tailwind CSS
 * **Telemetry Visuals:** Recharts
 * **Build Tool:** Vite
+
+## Whats the Future 
+This is for my webOS1, for webOS2 i will be going way farrr
+1. Media player
+2. file uploads
+3. Mini Apps, calulator, color picker, clock, calendar etc
+4. a Tips app to let user know about OS
+5. Animations
+6. More customization , accent colors
 
 ## 🚀 Run it Locally
 
