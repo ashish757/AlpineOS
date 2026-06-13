@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '../store/store'
 import { createFolder, createFile } from '../store/fileSystemSlice'
-import type { WindowState } from '../store/windowSlice'
+import { closeWindow, type WindowState } from '../store/windowSlice'
+import { removeProcess } from '../store/processSlice'
 
 export const TerminalApp = ({ winInfo }: { winInfo: WindowState }) => {
   const dispatch = useDispatch()
@@ -10,7 +11,7 @@ export const TerminalApp = ({ winInfo }: { winInfo: WindowState }) => {
   const { files, folders } = fileSystemState
 
   const [currentFolderId, setCurrentFolderId] = useState('root')
-  const [history, setHistory] = useState<string[]>([])
+  const [history, setHistory] = useState<string[]>(['Welcome to AlpineOS Terminal! Type "help" for a list of commands.'])
   const [commandHistory, setCommandHistory] = useState<string[]>([])
   const [historyIndex, setHistoryIndex] = useState(-1)
   const [input, setInput] = useState('')
@@ -99,6 +100,10 @@ export const TerminalApp = ({ winInfo }: { winInfo: WindowState }) => {
           )
         }
       } 
+      else if (command === 'exit') {
+          dispatch(removeProcess(winInfo.processId))
+          dispatch(closeWindow(winInfo.id))
+      } 
       else if (command === 'whoami') {
         output = 'user'
       } 
@@ -114,6 +119,8 @@ export const TerminalApp = ({ winInfo }: { winInfo: WindowState }) => {
               - clear: Clear the terminal history
               - mkdir: Create Folder
               - rm: Remove files and folders
+              - exit: Close the terminal
+              - help: Show this help message
               `  
 
       } else if (command === 'touch') {
