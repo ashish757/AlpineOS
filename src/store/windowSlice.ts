@@ -23,6 +23,25 @@ const initialState: Windows = {
   highestIndex: 10
 };
 
+const getWindowCords = (spawnCount: number, maxW: number, maxH: number) => {
+  const startX = 150;
+  const startY = 100;
+  const off = 30;
+  const winW = 600;
+  const winH = 400;
+
+  let posX = startX + (spawnCount * off);
+  let posY = startY + (spawnCount * off);
+
+  if (posX + winW > maxW || posY + winH > maxH) {
+    const wrap = (spawnCount % 5) * 40;
+    posX = startX + wrap;
+    posY = startY + wrap;
+  }
+
+  return { x: posX, y: posY };
+};
+
 export const windowSlice = createSlice({
   name: 'os',
   initialState,
@@ -35,8 +54,8 @@ export const windowSlice = createSlice({
         title: action.payload.config.title,
         index: state.highestIndex + 1,
         componentId: action.payload.config.componentId,
-        x: 150 + (state.active.length * 30),
-        y: 100 + (state.active.length * 30),
+        x: getWindowCords(state.active.length, window.innerWidth, window.innerHeight).x,
+        y: getWindowCords(state.active.length, window.innerWidth, window.innerHeight).y,
         args: action.payload.args
       };
       state.active.push(newWindow);
