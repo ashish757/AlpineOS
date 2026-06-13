@@ -15,8 +15,9 @@ What do you want?
 - Create Text files and folders
 - use Terminal to create file ```touch``` and folders ```mkdir```, change directory ```cd```, delete with ```rmdir```, more commands ```ls```, ```pwd```, ```whoami```, ```help```
 - Use Activity App to see all the currenlty running processes
+- Can open personalization setting by right click on the desktop, change wallpapers, more customization will be added soon 
 - Browser - allows to visit wesite that do not block iframe requests like wikipedia
-- Finder - File manager can do all the basic File management taks - CRUD
+- Finder - File manager can do all the basic File management taks - CRUD, can selete files and folders just like real OS
 - TextPad - allows creation and updation of text files
 
 ---
