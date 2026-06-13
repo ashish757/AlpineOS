@@ -1,17 +1,40 @@
 # AlpineOS
 
-> A fully functional, persistent, browser-based operating system built with React and Redux.
+> A functional, persistent, browser-based operating system, not just a CSS UI mockup AlpineOS is a web-based desktop environment powered by a custom Redux "kernel." It features real background process management, a persistent virtual file system, and an advanced window management engine. 
 
-AlpineOS is a web-based desktop environment powered by a custom Redux "kernel." It features real background process management, a persistent virtual file system, and an advanced window management engine. 
 
-What do you want?
 
 **See live demo** [https://alpine-os-eight.vercel.app](https://alpine-os-eight.vercel.app)
-** OR Wanna run locally** checkout bottom of the readme
+
+**OR Wanna run locally** checkout bottom of the readme
 
 **Contact Me** ashishrajsingh75@gmail.com
 
-# Befroe Details here is the list of Things you can do in AlpineOS
+---
+
+## I built AlpineOS
+- live Activity Manager that tracks active PIDs and simulated CPU/Memory telemetry.
+- It includes a persistent Virtual File System
+- An draggable Window Manager
+- Terminal engine that interacts with the File System
+- Persistency , File and folders are persistennt and so it the state of the OS, you leave and come back just find that it has retained the state.
+
+
+# The Challange?
+The architecture and state management were incredibly complex. 
+- Synchonizing the UI with the actual process mangement in the "kernal"
+- Persistence, making the whole website persistence.
+- Creatin an Task manager was fun and exciting, it felt like a real low level OS feature
+
+# Excitement??? hell yeah
+- my whole time I have been building, high-level websites and backend. I never tried a low level project, although this is not Low Level but it forced me to explore the architecture and concepts of hoow operating system works at Low level, how terminal connect with the file system.
+- who doesn't get excited by low level ??
+- Being able to selec multiple files and folder, not dragable yet, but soon will be
+
+
+# What can i do?
+- When you boot it up, don't just click the icons  and look and design and colors, stress test the ARCHITECTURE!
+- Open the Terminal , use ```cd``` to change directory and  try standard commands like mkdir, touch, ls, and interact with the file system
 - Create Text files and folders
 - use Terminal to create file ```touch``` and folders ```mkdir```, change directory ```cd```, delete with ```rmdir```, more commands ```ls```, ```pwd```, ```whoami```, ```help```
 - Use Activity App to see all the currenlty running processes
@@ -19,6 +42,12 @@ What do you want?
 - Browser - allows to visit wesite that do not block iframe requests like wikipedia
 - Finder - File manager can do all the basic File management taks - CRUD, can selete files and folders just like real OS
 - TextPad - allows creation and updation of text files
+- Open the Activity Manager side-by-side with other apps to watch the active processes update and check the live  charts (dummy)
+- Right-click the desktop to open Personalization and change the wallpaper.
+
+**Most importantly:** Open a few windows, move them around the screen, and then hard refresh your browser or maybe just restart and  Watch the persistence engine drop you right back where you left off.
+
+
 
 ---
 
