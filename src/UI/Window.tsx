@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, memo } from "react";
 import { useDispatch } from "react-redux";
 import { closeWindow, focusApp, moveWindow } from "../store/windowSlice"; 
 import type { WindowState } from "../store/windowSlice";
+import { removeProcess } from "../store/processSlice";
 
 interface WindowProps {
   info: WindowState;
@@ -106,10 +107,7 @@ export const Window = memo(({info, children}: WindowProps) => {
       ref={windowRef}
       onMouseDown={() => dispatch(focusApp(info.id))}
       onContextMenu={(e) => {
-        // Prevent desktop context menu from showing when right-clicking inside any window
         e.stopPropagation();
-        // We do not preventDefault here so that apps can implement their own context menus,
-        // or browser default text-selection menus can appear in Textpad if needed.
       }}
       style={{
         left: `${localPos.x}px`,
@@ -136,6 +134,7 @@ export const Window = memo(({info, children}: WindowProps) => {
             onClick={(e) => {
               e.stopPropagation(); 
               dispatch(closeWindow(info.id));
+              dispatch(removeProcess(info.processId));
             }}
             className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-400 focus:outline-none flex items-center justify-center group"
             aria-label="Close"

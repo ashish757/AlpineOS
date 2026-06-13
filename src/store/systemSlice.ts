@@ -8,7 +8,7 @@ interface SystemState {
 
 
 const initialState: SystemState = {
-  powerState: 'ON',
+  powerState: 'OFF',
 };
 
 export const systemSlice = createSlice({

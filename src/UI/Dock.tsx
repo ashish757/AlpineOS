@@ -10,7 +10,7 @@ const Dock = () => {
     const attachContextMenu = useContextMenuTrigger();
 
     const apps = [
-        { id: 'activityManager', name: 'Activity Manager', icon: '📈' },
+        { id: 'activityManager', name: 'Activity', icon: '📈' },
         { id: 'browser', name: 'Browser', icon: '🌐' },
         { id: 'finder', name: 'Finder', icon: '📁' },
         { id: 'terminal', name: 'Terminal', icon: '🖥️' },
@@ -31,7 +31,7 @@ const Dock = () => {
     };
 
     return (
-        <footer className="z-20 h-16 w-full  flex items-center justify-center gap-5 px-4 pb-2">
+        <footer className="z-20 h-16 w-full  flex items-center justify-center gap-6 px-4 pb-2">
             {apps.map(app => (
                 <button 
                     key={app.id}
@@ -41,6 +41,9 @@ const Dock = () => {
                     title={app.name}
                 >
                     <span className="text-5xl drop-shadow-lg">{app.icon}</span>
+                    <span className="px-2 py-0.5 rounded text-shadow text-white text-xs font-medium">
+                        {app.name}
+                    </span>
                 </button>
             ))}
         </footer>
