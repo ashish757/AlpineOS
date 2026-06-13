@@ -62,7 +62,9 @@ export const initialState: FileSystemState = {
       parentId: 'dc',
       extension: 'md',
       content: '# sys init\nusr dir setup complete.'
-    }
+    },
+     { id: 'f7', name: 'Notes1', parentId: 'desk', extension: 'txt', content: 'Buy milk\nCall Alice' },
+    { id: 'f8', name: 'Notes2', parentId: 'desk', extension: 'txt', content: 'Buy bread\nCall Bob' },
   ],
   folders: [
     { id: 'root', name: '/', parentId: '' },
@@ -84,6 +86,10 @@ export const initialState: FileSystemState = {
      { id: 'mus', name: 'Music', parentId: 'usrAcc' },
       { id: 'pub', name: 'Public', parentId: 'usrAcc' },
        { id: 'pic', name: 'Pictures', parentId: 'usrAcc' },
+
+       { id: 'dum', name: 'Dummy', parentId: 'desk' },
+
+
 
 
 
