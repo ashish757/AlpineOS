@@ -17,13 +17,15 @@ import {useContextMenu} from './UI/contextMenuUtils';
 import { closeAllProcesses } from './store/processSlice';
 import { closeAllWindows } from './store/windowSlice';
 import { setPowerState } from './store/systemSlice';
+import { ActivityManagerApp } from './apps/ActivityManagerApp';
 
 const componentMap: Record<string, React.ElementType> = {
   'FINDER_APP': FinderApp,
   'TERMINAL_APP': TerminalApp,
   'TEXTPAD_APP': TextpadApp,
   'BROWSER_APP': BrowserApp,
-  'SAVE_DIALOG_APP': SaveDialogApp
+  'SAVE_DIALOG_APP': SaveDialogApp,
+'ACTIVITY_MANAGER_APP': ActivityManagerApp
 };
 
 const OsDesktop: React.FC = () => {

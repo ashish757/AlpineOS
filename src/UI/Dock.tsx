@@ -10,6 +10,7 @@ const Dock = () => {
     const attachContextMenu = useContextMenuTrigger();
 
     const apps = [
+        { id: 'activityManager', name: 'Activity Manager', icon: '📈' },
         { id: 'browser', name: 'Browser', icon: '🌐' },
         { id: 'finder', name: 'Finder', icon: '📁' },
         { id: 'terminal', name: 'Terminal', icon: '💻' },

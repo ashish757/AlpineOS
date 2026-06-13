@@ -44,6 +44,13 @@ export const processRegistry: ProcessRegistry = {
         reqWindow: true,
         title: 'Save File',
         componentId: 'SAVE_DIALOG_APP',
+    },
+    activityManager: {
+        id: 'activityManager',
+        icon: '/icons/activitymanager.png',
+        reqWindow: true,
+        title: 'Activity Manager',
+        componentId: 'ACTIVITY_MANAGER_APP',
     }
    
 }
