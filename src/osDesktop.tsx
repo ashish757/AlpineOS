@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type {AppDispatch, RootState} from './store/store'
 import Dock from './UI/Dock';
@@ -57,6 +57,9 @@ const OsDesktop: React.FC = () => {
     ]);
   }
 
+      const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  
+
   return (
     <div className="w-screen h-screen relative overflow-hidden flex flex-col" >
 
@@ -64,8 +67,8 @@ const OsDesktop: React.FC = () => {
       <MenuBar />
 
 
-      <main className="flex-1 relative z-0 p-4" onContextMenu={handleDesktopContextMenu}>
-        <DesktopIcons />
+      <main className="flex-1 relative z-0 p-4" onContextMenu={handleDesktopContextMenu} onClick={() => setSelectedIds([])} >
+        <DesktopIcons setSelectedIds={setSelectedIds} selectedIds={selectedIds} />
         {windows.map(window => {
           if(window.isOpen) {
             const Component = componentMap[window.componentId];

@@ -6,12 +6,11 @@ import { executeProcess } from '../store/processThunk';
 import { useContextMenuTrigger } from './contextMenuUtils';
 import { useGlobalDialogs } from './GlobalDialogs';
 
-export const DesktopIcons = () => {
+export const DesktopIcons = ({ setSelectedIds, selectedIds }: { setSelectedIds: React.Dispatch<React.SetStateAction<string[]>>; selectedIds: string[] }) => {
     const {files, folders} = useSelector((state: RootState) => state.fileSystem);
     const dispatch = useDispatch<AppDispatch>();
     const {openFile} = useFileHandler();
 
-    const [selectedIds, setSelectedIds] = useState<string[]>([]);
     
     const attachContextMenu = useContextMenuTrigger();
     const { showRenameDialog, showDeleteDialog } = useGlobalDialogs();
@@ -21,6 +20,10 @@ export const DesktopIcons = () => {
     if (e.ctrlKey || e.metaKey) {
       setSelectedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
     } else {
+      if(selectedIds.length === 1 && selectedIds[0] === id) {
+        setSelectedIds([]);
+        return;
+      }
       setSelectedIds([id]);
     }
   };
