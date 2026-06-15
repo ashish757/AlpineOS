@@ -5,6 +5,7 @@
     @apply overflow-hidden w-screen h-screen m-0 bg-slate-900;
     user-select: none;
     touch-action: none;
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
 }
 @layer utilities {

@@ -123,7 +123,7 @@ export const Window = memo(({info, children}: WindowProps) => {
       <div
         onMouseDown={handleDragStart}
         onDoubleClick={handleToggleMaximize}
-        className="bg-slate-800/50 px-4 py-2 flex justify-between items-center select-none cursor-pointer border-b border-slate-700/50"
+        className="bg-slate-800/50 px-4 py-2 flex justify-between items-center select-none border-b border-slate-700/50"
       >
         <span className="text-xs tracking-widest font-bold text-slate-300 uppercase">
           {info.title}
@@ -136,7 +136,7 @@ export const Window = memo(({info, children}: WindowProps) => {
               dispatch(closeWindow(info.id));
               dispatch(removeProcess(info.processId));
             }}
-            className="w-3 h-3 bg-red-500 rounded-full hover:bg-red-400 focus:outline-none flex items-center justify-center group"
+            className="w-3 h-3 bg-red-600 rounded-full hover:bg-red-400 focus:outline-none flex items-center justify-center group"
             aria-label="Close"
           >
             <span className="opacity-0 group-hover:opacity-100 text-[8px] text-red-900 leading-none">x</span>
@@ -148,7 +148,7 @@ export const Window = memo(({info, children}: WindowProps) => {
               e.stopPropagation();
               handleToggleMaximize(e);
             }}
-            className="w-3 h-3 bg-green-500 rounded-full hover:bg-green-400 focus:outline-none flex items-center justify-center group"
+            className="w-3 h-3 bg-green-600 rounded-full hover:bg-green-400 focus:outline-none flex items-center justify-center group"
             aria-label="Maximize"
           >
             <span className="opacity-0 group-hover:opacity-100 text-[8px] text-green-900 leading-none">+</span>

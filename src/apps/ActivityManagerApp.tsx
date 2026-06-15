@@ -69,9 +69,9 @@ export const ActivityManagerApp = () => {
                 <td className="p-2 text-right">
                   <button 
                     onClick={() => killProcess(process.id)}
-                    className="px-2 py-1 rounded bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors"
+                    className="px-2 py-1 text-red-400 hover:text-red-100"
                   >
-                    End Task
+                    Terminate
                   </button>
                 </td>
               </tr>

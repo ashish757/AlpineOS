@@ -17,7 +17,7 @@ const localWallpapers = loadWallpapers();
 
 const initialState: personalizationState = {
 
-  currentWallpaper: localWallpapers[0],
+  currentWallpaper: localWallpapers[11],
   localWallpapers: localWallpapers,
 };
 
