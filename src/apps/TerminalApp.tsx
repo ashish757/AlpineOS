@@ -23,6 +23,12 @@ export const TerminalApp = ({ winInfo }: { winInfo: WindowState }) => {
     }
   }, [history])
 
+  useEffect(() => {
+    if(winInfo.closingSignal === "SIGTERM") {
+      dispatch(removeProcess(winInfo.processId))
+      dispatch(closeWindow(winInfo.id))
+    }
+  });
   const getPath = (folderId: string) => {
     let currentId = folderId
     const pathParts: string[] = []

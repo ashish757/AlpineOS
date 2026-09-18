@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { type RootState } from '../store/store';
 import { createFile } from '../store/fileSystemSlice';
+import { removeProcess } from '../store/processSlice';
+
 import { updateWindowArgs, closeWindow, updateWindowTitle, type WindowState } from '../store/windowSlice';
 
 export const SaveDialogApp = ({ winInfo }: { winInfo: WindowState }) => {
@@ -38,6 +40,13 @@ export const SaveDialogApp = ({ winInfo }: { winInfo: WindowState }) => {
 
     dispatch(closeWindow(winInfo.id));
   };
+
+  useEffect(() => {
+    if(winInfo.closingSignal === "SIGTERM") {
+      dispatch(removeProcess(winInfo.processId))
+      dispatch(closeWindow(winInfo.id))
+    }
+  });
 
   return (
     <div className="flex flex-col h-full bg-[#1e1e1e] text-slate-200">

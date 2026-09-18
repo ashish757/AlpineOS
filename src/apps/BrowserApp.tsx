@@ -1,10 +1,23 @@
-import  { useState, type KeyboardEvent } from 'react'
+import {useState, type KeyboardEvent, useEffect} from 'react'
+import {removeProcess} from "../store/processSlice.ts";
+import {closeWindow, type WindowState} from "../store/windowSlice.ts";
+import {useDispatch} from "react-redux";
 
-export const BrowserApp = () => {
+
+export const BrowserApp = ({winInfo}: {winInfo: WindowState}) => {
   const [inp, setInp] = useState('https://www.wikipedia.org')
   const [src, setSrc] = useState('https://www.wikipedia.org')
   const [hist, setHist] = useState<string[]>(['https://www.wikipedia.org'])
   const [pos, setPos] = useState(0)
+  const dispatch = useDispatch()
+
+
+  useEffect(() => {
+    if(winInfo.closingSignal === "SIGTERM") {
+      dispatch(removeProcess(winInfo.processId))
+      dispatch(closeWindow(winInfo.id))
+    }
+  });
 
   const nav = (newSrc: string) => {
     let tSrc = newSrc

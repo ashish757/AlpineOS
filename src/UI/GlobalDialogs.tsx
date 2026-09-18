@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, type ReactNode } from 'react';
 import { useDispatch } from 'react-redux';
 import { RenameDialog } from './RenameDialog';
-import { ConfirmDialog } from './ConfirmDialog';
+import { SaveDialog } from './saveDialog.tsx';
 import { rename, deleteFile, deleteFolder } from '../store/fileSystemSlice';
 
 interface GlobalDialogContextType {
@@ -66,12 +66,14 @@ export const GlobalDialogsProvider = ({ children }: { children: ReactNode }) => 
         />
       )}
       {actionItem && (
-        <ConfirmDialog 
+        <SaveDialog
           isOpen={showDelete} 
           title="Delete Item"
           message={`Are you sure you want to delete "${actionItem.name}"? This action cannot be undone.`}
-          onConfirm={handleDeleteConfirm} 
-          onCancel={() => { setShowDelete(false); setActionItem(null); }} 
+          buttons={[
+            { 'label': 'Cancel', onClick: () => { setShowDelete(false); setActionItem(null); }, variant: 'default' },
+            { 'label': 'Delete', onClick: handleDeleteConfirm, variant: 'danger', isDefaultFocus: true }
+          ]}
         />
       )}
     </GlobalDialogContext.Provider>

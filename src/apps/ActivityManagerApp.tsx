@@ -5,9 +5,10 @@ import { removeProcess, type Process } from '../store/processSlice';
 import { LineChart, Line, ResponsiveContainer, YAxis } from 'recharts';
 import { useTelemetry } from '../hooks/useTelemetry';
 
-import { closeWindow } from '../store/windowSlice';
+import {closeWindow, type WindowState} from '../store/windowSlice';
+import {useEffect} from "react";
 
-export const ActivityManagerApp = () => {
+export const ActivityManagerApp = ({winInfo}: {winInfo: WindowState}) => {
   const dispatch = useDispatch();
   const perfData = useTelemetry();
   
@@ -19,6 +20,13 @@ export const ActivityManagerApp = () => {
     const wid = activeWindows.find(w => w.processId === pid)?.id;
     dispatch(closeWindow(wid || ""));
   };
+
+    useEffect(() => {
+        if(winInfo.closingSignal === "SIGTERM") {
+            dispatch(removeProcess(winInfo.processId))
+            dispatch(closeWindow(winInfo.id))
+        }
+    });
 
   return (
     <div className="flex flex-col h-full bg-[#1e1e1e] text-slate-300 font-mono text-xs">

@@ -1,6 +1,8 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { ProcessConfig } from '../config/processRegistry';
 
+export type ClosingSignal = "SIGINT" | "SIGTERM" | "SIGKILL" | "";
+
 export interface WindowState {
   id: string;
   processId: string; 
@@ -11,6 +13,7 @@ export interface WindowState {
   x: number;
   y: number;
   args?: Record<string, string>;
+closingSignal: ClosingSignal;
 }
 
 export interface Windows {
@@ -56,6 +59,7 @@ export const windowSlice = createSlice({
         componentId: action.payload.config.componentId,
         x: getWindowCords(state.active.length, window.innerWidth, window.innerHeight).x,
         y: getWindowCords(state.active.length, window.innerWidth, window.innerHeight).y,
+        closingSignal: "",
         args: action.payload.args
       };
       state.active.push(newWindow);
@@ -65,6 +69,12 @@ export const windowSlice = createSlice({
       const window = state.active.find((window) => window.id === action.payload);
       if (window) {
         window.isOpen = false;
+      }
+    },
+    sendClosingSignal: (state, action: PayloadAction<{id: string, signal: ClosingSignal}>) => {
+      const window = state.active.find((window) => window.id === action.payload.id);
+      if (window) {
+        window.closingSignal = action.payload.signal;
       }
     },
     focusApp: (state, action: PayloadAction<string>) => {
@@ -101,6 +111,6 @@ export const windowSlice = createSlice({
   },
 });
 
-export const { closeAllWindows, closeWindow, createWindow, focusApp, moveWindow, updateWindowTitle, updateWindowArgs } = windowSlice.actions;
+export const { closeAllWindows, closeWindow, createWindow, focusApp, moveWindow, updateWindowTitle, updateWindowArgs, sendClosingSignal } = windowSlice.actions;
 
 export default windowSlice.reducer;

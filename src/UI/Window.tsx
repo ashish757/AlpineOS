@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect, memo } from "react";
 import { useDispatch } from "react-redux";
-import { closeWindow, focusApp, moveWindow } from "../store/windowSlice"; 
+import { focusApp, moveWindow, sendClosingSignal } from "../store/windowSlice"; 
 import type { WindowState } from "../store/windowSlice";
-import { removeProcess } from "../store/processSlice";
 
 interface WindowProps {
   info: WindowState;
@@ -133,8 +132,9 @@ export const Window = memo(({info, children}: WindowProps) => {
             onMouseDown={(e) => e.stopPropagation()} 
             onClick={(e) => {
               e.stopPropagation(); 
-              dispatch(closeWindow(info.id));
-              dispatch(removeProcess(info.processId));
+              dispatch(sendClosingSignal({id: info.id, signal: "SIGTERM"}));
+              // dispatch(closeWindow(info.id));
+              // dispatch(removeProcess(info.processId));
             }}
             className="w-3 h-3 bg-red-600 rounded-full hover:bg-red-400 focus:outline-none flex items-center justify-center group"
             aria-label="Close"

@@ -43,7 +43,7 @@ const Dock = () => {
                     key={app.id}
                     onClick={() => dispatch(executeProcess(app.id))} 
                     {...getAppContextMenu(app.id)}
-                    className="flex flex-col items-center justify-center transform  scale-100 hover:scale-105 transition-all duration-200 group"
+                    className="flex flex-col items-center justify-center transform group"
                     title={app.name}
                 >
                     <span className="" data-tooltip-target={app.name}>

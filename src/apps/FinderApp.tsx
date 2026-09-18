@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useEffect, useState} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { type RootState } from '../store/store'
 import { createFolder, createFile } from '../store/fileSystemSlice'
@@ -7,6 +7,8 @@ import { closeWindow, type WindowState } from '../store/windowSlice'
 import { useContextMenuTrigger } from '../UI/contextMenuUtils'
 import { useGlobalDialogs } from '../UI/GlobalDialogs'
 import { useAppMenuBar } from '../UI/MenuBarContext'
+import {removeProcess} from "../store/processSlice.ts";
+
 
 export const FinderApp = ({winInfo}: { winInfo: WindowState }) => {
   const dispatchAction = useDispatch()
@@ -26,6 +28,14 @@ export const FinderApp = ({winInfo}: { winInfo: WindowState }) => {
     folders: fileSystemState.folders.filter((f) => f.parentId === folderId),
     files: fileSystemState.files.filter((f) => f.parentId === folderId),
   }
+
+
+  useEffect(() => {
+    if(winInfo.closingSignal === "SIGTERM") {
+      dispatchAction(removeProcess(winInfo.processId))
+      dispatchAction(closeWindow(winInfo.id))
+    }
+  });
 
   const handleNewFolder = () => {
     const fName = prompt('Enter folder name:', 'New Folder')

@@ -1,8 +1,11 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { setWallpaper } from '../store/personalizationSlice';
 import type { RootState } from '../store/store';
+import { useEffect } from 'react';
+import { removeProcess } from '../store/processSlice';
+import {closeWindow, type WindowState} from '../store/windowSlice';
 
-export const PersonalizationApp = () => {
+export const PersonalizationApp = ({winInfo}: {winInfo: WindowState}) => {
   const dispatch = useDispatch();
   const currentWallpaper = useSelector((state: RootState) => state.personalization.currentWallpaper);
   const localWallpapers = useSelector((state: RootState) => state.personalization.localWallpapers);
@@ -14,6 +17,13 @@ export const PersonalizationApp = () => {
 
     dispatch(setWallpaper({type: 'local', id }));
   };
+
+    useEffect(() => {
+        if(winInfo.closingSignal === "SIGTERM") {
+            dispatch(removeProcess(winInfo.processId))
+            dispatch(closeWindow(winInfo.id))
+        }
+    });
 return (
     <div className="flex flex-col h-full bg-[#1e1e1e] text-slate-200 p-6 gap-8 overflow-y-auto">
       <div className="grid grid-cols-[repeat(auto-fill,minmax(200px,1fr))] gap-2">
