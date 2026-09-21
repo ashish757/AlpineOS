@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, memo } from "react";
 import { useDispatch } from "react-redux";
-import { focusApp, moveWindow, sendClosingSignal } from "../store/windowSlice"; 
+import { focusApp, moveWindow, sendClosingSignal, toggleMinimizeWindow } from "../store/windowSlice";
 import type { WindowState } from "../store/windowSlice";
 
 interface WindowProps {
@@ -15,13 +15,13 @@ export const Window = memo(({info, children}: WindowProps) => {
   const [localPos, setLocalPos] = useState({ x: info.x, y: info.y });
   const [isDragging, setIsDragging] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
-  
+
   const dragStartRef = useRef({ mouseX: 0, mouseY: 0, winX: 0, winY: 0 });
 
 
   const handleToggleMaximize = (e?: React.MouseEvent) => {
     e?.stopPropagation();
-    dispatch(focusApp(info.id)); 
+    dispatch(focusApp(info.id));
     setIsMaximized(prev => !prev);
   };
 
@@ -37,7 +37,7 @@ export const Window = memo(({info, children}: WindowProps) => {
       dispatch(focusApp(info.id));
       return;
     }
-    e.stopPropagation(); 
+    e.stopPropagation();
     dispatch(focusApp(info.id));
     setIsDragging(true);
     dragStartRef.current = {
@@ -71,7 +71,7 @@ export const Window = memo(({info, children}: WindowProps) => {
         setIsDragging(false);
         const deltaX = e.clientX - dragStartRef.current.mouseX;
         const deltaY = e.clientY - dragStartRef.current.mouseY;
-        
+
         // Calculate bounded coordinates for saving to Redux
         const rect = windowRef.current?.getBoundingClientRect();
         const nextX = dragStartRef.current.winX + deltaX;
@@ -102,63 +102,75 @@ export const Window = memo(({info, children}: WindowProps) => {
   }, [isDragging, isMaximized, info.id, dispatch]);
 
   return (
-    <div
-      ref={windowRef}
-      onMouseDown={() => dispatch(focusApp(info.id))}
-      onContextMenu={(e) => {
-        e.stopPropagation();
-      }}
-      style={{
-        left: `${localPos.x}px`,
-        top: `${localPos.y}px`,
-        zIndex: info.index,
-      }}
-      className={`absolute flex flex-col bg-slate-900/95 backdrop-blur-md border border-slate-700 shadow-2xl overflow-hidden ring-1 ring-white/10 ${
-        isMaximized 
-          ? "rounded-none !w-full !h-full !left-0 !top-0" 
-          : "w-[600px] h-[400px] rounded-lg resize min-w-[300px] min-h-[200px]"
-      }`}
-    >
       <div
-        onMouseDown={handleDragStart}
-        onDoubleClick={handleToggleMaximize}
-        className="bg-slate-800/50 px-4 py-2 flex justify-between items-center select-none border-b border-slate-700/50"
+          ref={windowRef}
+          onMouseDown={() => dispatch(focusApp(info.id))}
+          onContextMenu={(e) => {
+            e.stopPropagation();
+          }}
+          style={{
+            left: `${localPos.x}px`,
+            top: `${localPos.y}px`,
+            zIndex: info.index,
+          }}
+          className={`absolute flex-col bg-slate-900/95 backdrop-blur-md border border-slate-700 shadow-2xl overflow-hidden ring-1 ring-white/10 ${
+              info.isMinimized ? "hidden" : "flex"
+          } ${
+              isMaximized
+                  ? "rounded-none !w-full !h-full !left-0 !top-0"
+                  : "w-[600px] h-[400px] rounded-lg resize min-w-[300px] min-h-[200px]"
+          }`}
       >
+        <div
+            onMouseDown={handleDragStart}
+            onDoubleClick={handleToggleMaximize}
+            className="bg-slate-800/50 px-4 py-2 flex justify-between items-center select-none border-b border-slate-700/50"
+        >
         <span className="text-xs tracking-widest font-bold text-slate-300 uppercase">
           {info.title}
         </span>
-        <div className="flex gap-2">
-          <button
-            onMouseDown={(e) => e.stopPropagation()} 
-            onClick={(e) => {
-              e.stopPropagation(); 
-              dispatch(sendClosingSignal({id: info.id, signal: "SIGTERM"}));
-              // dispatch(closeWindow(info.id));
-              // dispatch(removeProcess(info.processId));
-            }}
-            className="w-3 h-3 bg-red-600 rounded-full hover:bg-red-400 focus:outline-none flex items-center justify-center group"
-            aria-label="Close"
-          >
-            <span className="opacity-0 group-hover:opacity-100 text-[8px] text-red-900 leading-none">x</span>
-          </button>
-          
-          <button
-            onMouseDown={(e) => e.stopPropagation()} 
-            onClick={(e) => {
-              e.stopPropagation();
-              handleToggleMaximize(e);
-            }}
-            className="w-3 h-3 bg-green-600 rounded-full hover:bg-green-400 focus:outline-none flex items-center justify-center group"
-            aria-label="Maximize"
-          >
-            <span className="opacity-0 group-hover:opacity-100 text-[8px] text-green-900 leading-none">+</span>
-          </button>
+          <div className="flex gap-2">
+            <button
+                onMouseDown={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  dispatch(sendClosingSignal({id: info.id, signal: "SIGTERM"}));
+                }}
+                className="w-3 h-3 bg-red-600 rounded-full hover:bg-red-400 focus:outline-none flex items-center justify-center group"
+                aria-label="Close"
+            >
+              <span className="opacity-0 group-hover:opacity-100 text-[8px] text-red-900 leading-none">x</span>
+            </button>
+
+            <button
+                onMouseDown={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  dispatch(toggleMinimizeWindow(info.id));
+                }}
+                className="w-3 h-3 bg-yellow-500 rounded-full hover:bg-yellow-400 focus:outline-none flex items-center justify-center group"
+                aria-label="Minimize"
+            >
+              <span className="opacity-0 group-hover:opacity-100 text-[8px] text-yellow-900 leading-none">-</span>
+            </button>
+
+            <button
+                onMouseDown={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleToggleMaximize(e);
+                }}
+                className="w-3 h-3 bg-green-600 rounded-full hover:bg-green-400 focus:outline-none flex items-center justify-center group"
+                aria-label="Maximize"
+            >
+              <span className="opacity-0 group-hover:opacity-100 text-[8px] text-green-900 leading-none">+</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-auto text-slate-100 bg-transparent flex flex-col">
+          {children}
         </div>
       </div>
-
-      <div className="flex-1 overflow-auto text-slate-100 bg-transparent flex flex-col">
-        {children}
-      </div>
-    </div>
   );
 });

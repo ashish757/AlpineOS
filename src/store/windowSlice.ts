@@ -13,6 +13,7 @@ export interface WindowState {
   x: number;
   y: number;
   args?: Record<string, string>;
+  isMinimized?: boolean;
 closingSignal: ClosingSignal;
 }
 
@@ -84,6 +85,17 @@ export const windowSlice = createSlice({
         targetWindow.index = state.highestIndex;
       }
     },
+    toggleMinimizeWindow: (state, action: PayloadAction<string>) => {
+      const targetWindow = state.active.find((window) => window.id === action.payload);
+        if (targetWindow) {
+            targetWindow.isMinimized = !targetWindow.isMinimized;
+
+            if(!targetWindow.isMinimized) {
+              state.highestIndex += 1;
+              targetWindow.index = state.highestIndex;
+            }
+        }
+    },
     moveWindow: (state, action: PayloadAction<{id: string, x: number, y: number}>) => {
       const window = state.active.find((window) => window.id === action.payload.id);
       if (window) {
@@ -111,6 +123,6 @@ export const windowSlice = createSlice({
   },
 });
 
-export const { closeAllWindows, closeWindow, createWindow, focusApp, moveWindow, updateWindowTitle, updateWindowArgs, sendClosingSignal } = windowSlice.actions;
+export const { closeAllWindows, closeWindow, createWindow, focusApp, moveWindow, updateWindowTitle, updateWindowArgs, sendClosingSignal, toggleMinimizeWindow } = windowSlice.actions;
 
 export default windowSlice.reducer;
