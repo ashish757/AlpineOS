@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, memo } from "react";
 import { useDispatch } from "react-redux";
 import { focusApp, moveWindow, sendClosingSignal, toggleMinimizeWindow } from "../store/windowSlice";
 import type { WindowState } from "../store/windowSlice";
+import { motion } from "framer-motion";
 
 interface WindowProps {
   info: WindowState;
@@ -18,14 +19,12 @@ export const Window = memo(({info, children}: WindowProps) => {
 
   const dragStartRef = useRef({ mouseX: 0, mouseY: 0, winX: 0, winY: 0 });
 
-
   const handleToggleMaximize = (e?: React.MouseEvent) => {
     e?.stopPropagation();
     dispatch(focusApp(info.id));
     setIsMaximized(prev => !prev);
   };
 
-  // Sync localPos when info position changes externally (or restores)
   useEffect(() => {
     if (!isDragging) {
       setLocalPos({ x: info.x, y: info.y });
@@ -72,7 +71,6 @@ export const Window = memo(({info, children}: WindowProps) => {
         const deltaX = e.clientX - dragStartRef.current.mouseX;
         const deltaY = e.clientY - dragStartRef.current.mouseY;
 
-        // Calculate bounded coordinates for saving to Redux
         const rect = windowRef.current?.getBoundingClientRect();
         const nextX = dragStartRef.current.winX + deltaX;
         const nextY = dragStartRef.current.winY + deltaY;
@@ -102,20 +100,26 @@ export const Window = memo(({info, children}: WindowProps) => {
   }, [isDragging, isMaximized, info.id, dispatch]);
 
   return (
-      <div
+      <motion.div
           ref={windowRef}
           onMouseDown={() => dispatch(focusApp(info.id))}
           onContextMenu={(e) => {
             e.stopPropagation();
           }}
+          initial={{ opacity: 0, scale: 0.85, y: 20 }}
+          animate={
+            info.isMinimized
+                ? { opacity: 0, scale: 0.8, y: 100, pointerEvents: "none" } // Drops down and fades when minimized
+                : { opacity: 1, scale: 1, y: 0, pointerEvents: "auto" }     // Restores to standard state
+          }
+          exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
+          transition={{ type: "spring", damping: 25, stiffness: 300 }}
           style={{
             left: `${localPos.x}px`,
             top: `${localPos.y}px`,
             zIndex: info.index,
           }}
-          className={`absolute flex-col bg-slate-900/95 backdrop-blur-md border border-slate-700 shadow-2xl overflow-hidden ring-1 ring-white/10 ${
-              info.isMinimized ? "hidden" : "flex"
-          } ${
+          className={`absolute flex flex-col bg-slate-900/95 backdrop-blur-md border border-slate-700 shadow-2xl overflow-hidden ring-1 ring-white/10 ${
               isMaximized
                   ? "rounded-none !w-full !h-full !left-0 !top-0"
                   : "w-[600px] h-[400px] rounded-lg resize min-w-[300px] min-h-[200px]"
@@ -171,6 +175,6 @@ export const Window = memo(({info, children}: WindowProps) => {
         <div className="flex-1 overflow-auto text-slate-100 bg-transparent flex flex-col">
           {children}
         </div>
-      </div>
+      </motion.div>
   );
 });

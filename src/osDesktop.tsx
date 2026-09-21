@@ -20,6 +20,7 @@ import { setPowerState } from './store/systemSlice';
 import { ActivityManagerApp } from './apps/ActivityManagerApp';
 import { PersonalizationApp } from './apps/PersonalizationApp';
 import { executeProcess } from './store/processThunk';
+import { AnimatePresence } from 'framer-motion';
 
 const componentMap: Record<string, React.ElementType> = {
   'FINDER_APP': FinderApp,
@@ -32,7 +33,6 @@ const componentMap: Record<string, React.ElementType> = {
 };
 
 const OsDesktop: React.FC = () => {
-
   const windows = useSelector((state: RootState) => state.windows.active);
   const { showMenu } = useContextMenu();
   const dispatch = useDispatch<AppDispatch>();
@@ -57,36 +57,33 @@ const OsDesktop: React.FC = () => {
     ]);
   }
 
-      const [selectedIds, setSelectedIds] = useState<string[]>([]);
-  
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   return (
-    <div className="w-screen h-screen relative overflow-hidden flex flex-col" >
+      <div className="w-screen h-screen relative overflow-hidden flex flex-col" >
+        <Wallpaper />
+        <MenuBar />
 
-      <Wallpaper />     
-      <MenuBar />
+        <main className="flex-1 relative z-0 p-4" onContextMenu={handleDesktopContextMenu} onClick={() => setSelectedIds([])} >
+          <DesktopIcons setSelectedIds={setSelectedIds} selectedIds={selectedIds} />
 
+          <AnimatePresence>
+            {windows.map(window => {
+              if(window.isOpen) {
+                const Component = componentMap[window.componentId];
+                return (
+                    <Window key={window.id} info={window}>
+                      {Component ? <Component winInfo={window} /> : <div>Component Not Found</div>}
+                    </Window>
+                );
+              }
+              return null;
+            })}
+          </AnimatePresence>
+        </main>
 
-      <main className="flex-1 relative z-0 p-4" onContextMenu={handleDesktopContextMenu} onClick={() => setSelectedIds([])} >
-        <DesktopIcons setSelectedIds={setSelectedIds} selectedIds={selectedIds} />
-        {windows.map(window => {
-          if(window.isOpen) {
-            const Component = componentMap[window.componentId];
-            return (
-              <Window key={window.id} info={window}>
-                {Component ? <Component winInfo={window} /> : <div>Component Not Found</div>}
-              </Window>
-            );
-          }
-          return null;
-        })}
-      </main>
-
-      
-
-
-      <Dock />
-    </div>
+        <Dock />
+      </div>
   );
 };
 
