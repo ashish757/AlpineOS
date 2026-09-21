@@ -19,6 +19,7 @@ import { closeAllWindows } from './store/windowSlice';
 import { setPowerState } from './store/systemSlice';
 import { ActivityManagerApp } from './apps/ActivityManagerApp';
 import { PersonalizationApp } from './apps/PersonalizationApp';
+import { SettingsApp } from './apps/SettingsApp';
 import { executeProcess } from './store/processThunk';
 import { AnimatePresence } from 'framer-motion';
 
@@ -30,6 +31,7 @@ const componentMap: Record<string, React.ElementType> = {
   'SAVE_DIALOG_APP': SaveDialogApp,
   'ACTIVITY_MANAGER_APP': ActivityManagerApp,
   'PERSONALIZATION_APP': PersonalizationApp,
+  'SETTINGS_APP': SettingsApp,
 };
 
 const OsDesktop: React.FC = () => {
@@ -46,6 +48,9 @@ const OsDesktop: React.FC = () => {
   const handlePersonalize = () => {
     dispatch(executeProcess('personalization'));
   }
+  const handleWidgets = () => {
+    dispatch(executeProcess('settings'));
+  }
 
   const handleDesktopContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -53,6 +58,7 @@ const OsDesktop: React.FC = () => {
       { label: 'New Folder', action: () => alert('Create New Folder') },
       { label: 'Refresh', action: () => alert('Refresh Desktop') },
       { label: 'Personalize', action: handlePersonalize },
+      { label: 'Add Widgets', action: handleWidgets },
       { label: 'Shutdown', action: handleShutdown},
     ]);
   }

@@ -58,6 +58,13 @@ export const processRegistry: ProcessRegistry = {
         reqWindow: true,
         title: 'Personalization',
         componentId: 'PERSONALIZATION_APP',
+    },
+    settings: {
+        id: 'settings',
+        icon: '/icons/settings.png',
+        reqWindow: true,
+        title: 'Settings',
+        componentId: 'SETTINGS_APP',
     }
    
 }

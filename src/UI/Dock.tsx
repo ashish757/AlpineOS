@@ -8,6 +8,7 @@ import DocumentIcon from "../assets/icons/document.png";
 import TerminalIcon from "../assets/icons/terminal.png";
 import WWW from "../assets/icons/browser.png";
 import ActivityIcon from "../assets/icons/activity.png";
+import SettingsIcon from "../assets/icons/status.png";
 
 const Dock = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -16,6 +17,7 @@ const Dock = () => {
     const attachContextMenu = useContextMenuTrigger();
 
     const apps = [
+        { id: 'settings', componentId: 'SETTINGS_APP', name: 'Settings', icon:  SettingsIcon},
         { id: 'activityManager', componentId: 'ACTIVITY_MANAGER_APP', name: 'Activity', icon: ActivityIcon },
         { id: 'browser', componentId: 'BROWSER_APP', name: 'Browser', icon: WWW },
         { id: 'finder', componentId: 'FINDER_APP', name: 'Finder', icon: FolderIcon },
@@ -72,7 +74,7 @@ const Dock = () => {
                             title={app.name}
                         >
                         <span className="" data-tooltip-target={app.name}>
-                           <img src={app.icon} alt={app.name} className="w-10 h-10 object-contain transition-transform group-active:scale-95" />
+                            <img src={app.icon} alt={app.name} className="w-10 h-10 object-contain transition-transform group-active:scale-95" />
                         </span>
 
                             {isActive && (
