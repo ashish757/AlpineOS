@@ -1,4 +1,5 @@
 import ClockWidget from "../widgets/ClockWidget.tsx";
+import CalendarWidget from "../widgets/CalendarWidget.tsx";
 
 
 const Widgets = () => {
@@ -11,8 +12,8 @@ const Widgets = () => {
                     <ClockWidget />
                 </div>
                 <div className="p-4 rounded-md flex flex-col items-center gap-2">
-                    <span className="text-sm">Analog Clock</span>
-                    <ClockWidget />
+                    <span className="text-sm">Calendar</span>
+                    <CalendarWidget />
                 </div>
                 <div className="p-4 bg-white/5 rounded-lg border border-white/10 flex flex-col items-center justify-center gap-3 cursor-pointer hover:bg-white/10 transition-colors">
                     <span className="text-3xl">📅</span>

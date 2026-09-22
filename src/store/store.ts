@@ -11,7 +11,7 @@ import { settingsSlice } from './settingsSlice';
 const fsConfig = {
   key: 'alpine',
   storage: lf,
-  whitelist: ['fileSystem', 'system', 'windows', 'processes', 'personalization']
+  whitelist: ['fileSystem', 'system', 'windows', 'processes', 'settings']
 }
 
 const rootReducer = combineReducers({

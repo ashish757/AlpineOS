@@ -1,15 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../../store/store';
-import { updateWidgetPosition } from '../../store/settingsSlice';
+import { updateWidgetPosition, removeWidget } from '../../store/settingsSlice';
 import type { Widget } from '../../store/settingsSlice';
-import ClockWidget from './ClockWidget';
-
-const widgetMap: Record<string, React.ElementType> = {
-    'clock': ClockWidget,
-    // 'calendar': CalendarWidget,
-    // 'telemetry': TelemetryWidget,
-};
+import { widgetMap } from './widgetConfig';
+import {X} from "lucide-react";
 
 const DraggableWidget = ({ widget, children }: { widget: Widget, children: React.ReactNode }) => {
     const dispatch = useDispatch();
@@ -65,9 +60,18 @@ const DraggableWidget = ({ widget, children }: { widget: Widget, children: React
     return (
         <div
             onMouseDown={handleMouseDown}
-            className={`absolute pointer-events-auto ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+            className={`absolute pointer-events-auto group ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
             style={{ left: `${localPos.x}px`, top: `${localPos.y}px` }}
         >
+            <button
+                onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(removeWidget(widget.id));
+                }}
+                className="absolute -top-2 -left-2 w-5 h-5 bg-gray-500  rounded-full text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10 shadow-md hover:bg-red-400"
+            >
+                    <X />
+            </button>
             <div className="pointer-events-none select-none">
                 {children}
             </div>
