@@ -1,4 +1,4 @@
-import { type Wallpaper } from '../store/personalizationSlice';
+import { type Wallpaper } from '../store/settingsSlice';
 
 export const loadWallpapers = () => {
   const globRes = import.meta.glob('../assets/wallpapers/*.{png,jpg,jpeg,webp}', { 

@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 export default function Wallpaper() {
   
-  const wallpaper = useSelector((state: RootState) => state.personalization.currentWallpaper);
+  const wallpaper = useSelector((state: RootState) => state.settings.personalization.currentWallpaper);
 
 
   return (

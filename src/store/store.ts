@@ -6,7 +6,7 @@ import { systemSlice} from './systemSlice';
 
 import {persistStore, persistReducer} from 'redux-persist'
 import lf from 'localforage'
-import { personalizationSlice } from './personalizationSlice';
+import { settingsSlice } from './settingsSlice';
 
 const fsConfig = {
   key: 'alpine',
@@ -19,7 +19,7 @@ const rootReducer = combineReducers({
   system: systemSlice.reducer,
   windows: windowReducer,
   processes: processSlice.reducer,
-  personalization: personalizationSlice.reducer,  
+  settings: settingsSlice.reducer,
 });
 
 

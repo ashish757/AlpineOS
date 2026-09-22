@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { setWallpaper } from '../store/personalizationSlice';
+import { setWallpaper } from '../store/settingsSlice';
 import type { RootState } from '../store/store';
 import { useEffect } from 'react';
 import { removeProcess } from '../store/processSlice';
@@ -7,8 +7,8 @@ import {closeWindow, type WindowState} from '../store/windowSlice';
 
 export const PersonalizationApp = ({winInfo}: {winInfo: WindowState}) => {
   const dispatch = useDispatch();
-  const currentWallpaper = useSelector((state: RootState) => state.personalization.currentWallpaper);
-  const localWallpapers = useSelector((state: RootState) => state.personalization.localWallpapers);
+  const currentWallpaper = useSelector((state: RootState) => state.settings.personalization.currentWallpaper);
+  const localWallpapers = useSelector((state: RootState) => state.settings.personalization.localWallpapers);
 
 
   const applyWallpaper = (id: string) => {
