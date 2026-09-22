@@ -21,6 +21,7 @@ interface settingsState {
         accentColor: string;
         currentWallpaper: Wallpaper;
         localWallpapers: Wallpaper[];
+        hideDock: boolean;
     };
     widgets: {
         active: Widget[] | [];
@@ -36,6 +37,7 @@ const initialState: settingsState = {
         accentColor: "#0078D4",
         currentWallpaper: localWallpapers[11],
         localWallpapers: localWallpapers,
+        hideDock: false
     },
     widgets: {
         active: [{id:"as", type: "clock", x:2, y:1}],
@@ -69,9 +71,12 @@ export const settingsSlice = createSlice({
                 widget.y = action.payload.y;
             }
         },
+        toggleDockVisibility: (state) => {
+            state.personalization.hideDock = !state.personalization.hideDock;
+        }
     }
 });
 
-export const { setWallpaper, addWidget, removeWidget, updateWidgetPosition } = settingsSlice.actions;
+export const { setWallpaper, addWidget, removeWidget, updateWidgetPosition, toggleDockVisibility } = settingsSlice.actions;
 
 export default settingsSlice.reducer;
