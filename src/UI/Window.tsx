@@ -109,20 +109,19 @@ export const Window = memo(({info, children}: WindowProps) => {
           initial={{ opacity: 0, scale: 0.85, y: 20 }}
           animate={
             info.isMinimized
-                ? { opacity: 0, scale: 0.8, y: 100, pointerEvents: "none" } // Drops down and fades when minimized
-                : { opacity: 1, scale: 1, y: 0, pointerEvents: "auto" }     // Restores to standard state
+                ? { opacity: 0, scale: 0.8, y: 100, pointerEvents: "none" }
+                : { opacity: 1, scale: 1, y: 0, pointerEvents: "auto" }
           }
           exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.15 } }}
           transition={{ type: "spring", damping: 25, stiffness: 300 }}
           style={{
-            left: `${localPos.x}px`,
-            top: `${localPos.y}px`,
-            zIndex: info.index,
+            ...(isMaximized ? {} : { left: `${localPos.x}px`, top: `${localPos.y}px` }),
+            zIndex: isMaximized ? 99999 : info.index,
           }}
-          className={`absolute flex flex-col bg-slate-900/95 backdrop-blur-md border border-slate-700 shadow-2xl overflow-hidden ring-1 ring-white/10 ${
+          className={`flex flex-col bg-slate-900/95 backdrop-blur-md border border-slate-700 shadow-2xl overflow-hidden ring-1 ring-white/10 ${
               isMaximized
-                  ? "rounded-none !w-full !h-full !left-0 !top-0"
-                  : "w-[600px] h-[400px] rounded-lg resize min-w-[300px] min-h-[200px]"
+                  ? "!fixed inset-0 !w-screen !h-screen rounded-none"
+                  : "absolute w-[600px] h-[400px] rounded-lg resize min-w-[300px] min-h-[200px]"
           }`}
       >
         <div
