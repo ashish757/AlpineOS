@@ -8,9 +8,9 @@ export interface Wallpaper {
     url?: string;
 }
 
-export interface Widgets {
+export interface Widget {
     id: string;
-    type: "clock" | "calender" | "weather" | "telemetry";
+    type: "clock" | "calendar" | "weather" | "telemetry";
     x: number;
     y: number;
 }
@@ -23,10 +23,8 @@ interface settingsState {
         localWallpapers: Wallpaper[];
     };
     widgets: {
-        activeWidgets: Widgets[] | [];
-        allWidgets: Widgets[];
+        active: Widget[] | [];
     }
-
 
 }
 
@@ -40,9 +38,7 @@ const initialState: settingsState = {
         localWallpapers: localWallpapers,
     },
     widgets: {
-        activeWidgets: [],
-        allWidgets: [{id: '1', type: "clock", x:0,y:0}]
-
+        active: [{id:"as", type: "clock", x:2, y:1}],
     }
 
 };
@@ -51,8 +47,8 @@ export const settingsSlice = createSlice({
     name: 'settings',
     initialState,
     reducers: {
-        setWallpaper: (state, action: PayloadAction<{type: string, id: string}>) => {
-            const { type, id } = action.payload;
+        setWallpaper: (state, action: PayloadAction<{ type: string, id: string }>) => {
+            const {type, id} = action.payload;
             if (type === 'local') {
                 const wallpaper = state.personalization.localWallpapers.find(w => w.id === id);
                 if (wallpaper) {
@@ -60,9 +56,22 @@ export const settingsSlice = createSlice({
                 }
             }
         },
-    },
+        addWidget: (state, action: PayloadAction<Widget>) => {
+            state.widgets.active.push(action.payload);
+        },
+        removeWidget: (state, action: PayloadAction<string>) => {
+            state.widgets.active = state.widgets.active.filter(w => w.id !== action.payload);
+        },
+        updateWidgetPosition: (state, action: PayloadAction<{ id: string, x: number, y: number }>) => {
+            const widget = state.widgets.active.find(w => w.id === action.payload.id);
+            if (widget) {
+                widget.x = action.payload.x;
+                widget.y = action.payload.y;
+            }
+        },
+    }
 });
 
-export const { setWallpaper } = settingsSlice.actions;
+export const { setWallpaper, addWidget, removeWidget, updateWidgetPosition } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

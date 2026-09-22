@@ -18,10 +18,11 @@ import { closeAllProcesses } from './store/processSlice';
 import { closeAllWindows } from './store/windowSlice';
 import { setPowerState } from './store/systemSlice';
 import { ActivityManagerApp } from './apps/ActivityManagerApp';
-import { PersonalizationApp } from './apps/PersonalizationApp';
 import { SettingsApp } from './apps/SettingsApp';
 import { executeProcess } from './store/processThunk';
 import { AnimatePresence } from 'framer-motion';
+import {WidgetManager} from "./apps/widgets/WidgetManager.tsx";
+import {createFolder} from "./store/fileSystemSlice.ts";
 
 const componentMap: Record<string, React.ElementType> = {
   'FINDER_APP': FinderApp,
@@ -30,7 +31,6 @@ const componentMap: Record<string, React.ElementType> = {
   'BROWSER_APP': BrowserApp,
   'SAVE_DIALOG_APP': SaveDialogApp,
   'ACTIVITY_MANAGER_APP': ActivityManagerApp,
-  'PERSONALIZATION_APP': PersonalizationApp,
   'SETTINGS_APP': SettingsApp,
 };
 
@@ -44,19 +44,25 @@ const OsDesktop: React.FC = () => {
     dispatch(closeAllWindows());
     dispatch(setPowerState('OFF'));
   }
-
   const handlePersonalize = () => {
-    dispatch(executeProcess('personalization'));
+    dispatch(executeProcess('settings', { defaultTab: 'personalization' }));
   }
+
   const handleWidgets = () => {
-    dispatch(executeProcess('settings'));
+    dispatch(executeProcess('settings', { defaultTab: 'widgets' }));
+  }
+
+  const handleCreateFolder = () => {
+    const name = prompt("Folder Name: ")
+    if(!name) return;
+    dispatch(createFolder({id: "123", name, parentId: "desk"}));
   }
 
   const handleDesktopContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     showMenu(e.pageX, e.pageY, [
-      { label: 'New Folder', action: () => alert('Create New Folder') },
-      { label: 'Refresh', action: () => alert('Refresh Desktop') },
+      { label: 'New Folder', action: handleCreateFolder },
+      { label: 'Refresh', action: () => null},
       { label: 'Personalize', action: handlePersonalize },
       { label: 'Add Widgets', action: handleWidgets },
       { label: 'Shutdown', action: handleShutdown},
@@ -71,6 +77,7 @@ const OsDesktop: React.FC = () => {
         <MenuBar />
 
         <main className="flex-1 relative z-0 p-4" onContextMenu={handleDesktopContextMenu} onClick={() => setSelectedIds([])} >
+          <WidgetManager/>
           <DesktopIcons setSelectedIds={setSelectedIds} selectedIds={selectedIds} />
 
           <AnimatePresence>
