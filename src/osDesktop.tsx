@@ -76,24 +76,24 @@ const OsDesktop: React.FC = () => {
         <Wallpaper />
         <MenuBar />
 
-        <main className="flex-1 relative z-0 p-4" onContextMenu={handleDesktopContextMenu} onClick={() => setSelectedIds([])} >
+        <main className="flex-1 relative p-4" onContextMenu={handleDesktopContextMenu} onClick={() => setSelectedIds([])} >
           <WidgetManager/>
           <DesktopIcons setSelectedIds={setSelectedIds} selectedIds={selectedIds} />
-
-          <AnimatePresence>
-            {windows.map(window => {
-              if(window.isOpen) {
-                const Component = componentMap[window.componentId];
-                return (
-                    <Window key={window.id} info={window}>
-                      {Component ? <Component winInfo={window} /> : <div>Component Not Found</div>}
-                    </Window>
-                );
-              }
-              return null;
-            })}
-          </AnimatePresence>
         </main>
+
+        <AnimatePresence>
+          {windows.map(window => {
+            if(window.isOpen) {
+              const Component = componentMap[window.componentId];
+              return (
+                  <Window key={window.id} info={window}>
+                    {Component ? <Component winInfo={window} /> : <div>Component Not Found</div>}
+                  </Window>
+              );
+            }
+            return null;
+          })}
+        </AnimatePresence>
 
         <Dock />
       </div>

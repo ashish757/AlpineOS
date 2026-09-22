@@ -8,16 +8,17 @@ import DocumentIcon from "../assets/icons/document.png";
 import TerminalIcon from "../assets/icons/terminal.png";
 import WWW from "../assets/icons/browser.png";
 import ActivityIcon from "../assets/icons/activity.png";
-import SettingsIcon from "../assets/icons/status.png";
+import SettingsIcon from "../assets/icons/settings.png";
 
 const Dock = () => {
     const dispatch = useDispatch<AppDispatch>();
     const windows = useSelector((state: RootState) => state.windows.active);
     const highestIndex = useSelector((state: RootState) => state.windows.highestIndex);
+    const autoHideDock = useSelector((state: RootState) => state.settings.personalization.hideDock);
     const attachContextMenu = useContextMenuTrigger();
 
     const apps = [
-        { id: 'settings', componentId: 'SETTINGS_APP', name: 'Settings', icon:  SettingsIcon},
+        { id: 'settings', componentId: 'SETTINGS_APP', name: 'Settings', icon: SettingsIcon },
         { id: 'activityManager', componentId: 'ACTIVITY_MANAGER_APP', name: 'Activity', icon: ActivityIcon },
         { id: 'browser', componentId: 'BROWSER_APP', name: 'Browser', icon: WWW },
         { id: 'finder', componentId: 'FINDER_APP', name: 'Finder', icon: FolderIcon },
@@ -60,8 +61,14 @@ const Dock = () => {
     };
 
     return (
-        <footer className="w-full relative flex justify-center pb-4 z-9999">
-            <div className="flex items-center justify-center gap-5 bg-white/10 backdrop-blur-xs py-3 px-3 rounded-lg">
+        <footer
+            className={`absolute bottom-0 w-full flex justify-center pb-4 pt-10 z-9999 transition-transform duration-300 ease-in-out ${
+                autoHideDock
+                    ? "translate-y-[calc(100%-15px)] hover:translate-y-0"
+                    : "translate-y-0"
+            }`}
+        >
+            <div className="flex items-center justify-center gap-5 bg-white/10 backdrop-blur-xs py-3 px-3 rounded-lg shadow-lg">
                 {apps.map(app => {
                     const isActive = windows.some(w => w.componentId === app.componentId && w.isOpen);
 
@@ -73,9 +80,9 @@ const Dock = () => {
                             className="flex flex-col items-center justify-center transform group relative"
                             title={app.name}
                         >
-                        <span className="" data-tooltip-target={app.name}>
-                            <img src={app.icon} alt={app.name} className="w-10 h-10 object-contain transition-transform group-active:scale-95" />
-                        </span>
+                            <span className="" data-tooltip-target={app.name}>
+                               <img src={app.icon} alt={app.name} className="w-10 h-10 object-contain transition-transform group-active:scale-95 hover:scale-110" />
+                            </span>
 
                             {isActive && (
                                 <div className="absolute -bottom-2 w-1 h-1 bg-white/80 rounded-full shadow-[0_0_4px_rgba(255,255,255,0.8)]"></div>
@@ -90,7 +97,7 @@ const Dock = () => {
                 })}
             </div>
         </footer>
-    )
-}
+    );
+};
 
 export default Dock;
