@@ -62,9 +62,6 @@ The architecture and state management were incredibly complex.
 
 * **Decoupled Window & Process Management:** Inspired by real operating systems, AlpineOS separates background processes from visual UI windows. Closing an app destroys both the UI frame and the underlying process ID via a custom Redux slice, preventing memory leaks and ghost processes.
 
-![img_3.png](img_3.png)
-
-
 * **Persistent Virtual File System:** Powered by `localForage` and `redux-persist`. You can create, edit, and delete files/folders, and the entire file tree survives browser refreshes and tab closures. 
 
 
@@ -95,7 +92,7 @@ The architecture and state management were incredibly complex.
 ## WebOS2 Updates
 - My primary goal with this project was to make it as close to real OS concepts as possible
 - in this update i have tried to do that, and also build some more features to make it feel like an os
-![img_4.png](img_4.png)
+![img2.png](img2.png)
 
 ## Process & Window Management
 * Separated the window and process management jsut like real OS, like window UI is provided by the Os but whats running inside the window is controlled by another applicaiton software
@@ -110,18 +107,18 @@ The architecture and state management were incredibly complex.
 * Earlier there was a personalize app, which just changes the wallpapers
 * this is now merged as a tab in the new brand new settings app, which houses overall settings of the OS
 * like wallpaper, general, widgets
-* ![img_1.png](img_1.png)
+* ![img4.png](img4.png)
 
 ## Widgets
 * Widgets can now be added on the desktop and are draggable to any position on the desktop
-* ![img_5.png](img_5.png)
+* ![img.png](img.png)
 
 ## Dock
 - dock is nore improved it has detection for apps state like open, maximized or minimized
 - it also has a feature of auto hide similar to macos dock, and shows up automatically on hovering the lower areas screen
 
 ## Launch pad
-![img.png](img.png)
+![img3.png](img3.png)
 
 ## 🚀 Run it Locally
 
