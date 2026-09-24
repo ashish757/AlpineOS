@@ -105,13 +105,13 @@ The architecture and state management were incredibly complex.
 * now the process controls the closign of the app, instead of winodw which was the case in last version
 
 # Maximize & Minimize
-* Maximize & minimize window functionlity was added
+* Maximize & minimize window functionality was added
 * i created smart minimize feature , the dock now shows indicator if an app is open but minimised and when clicked it detected the condition and either open the app from background or relaunches depeding upon the state
 * maximize also had a bugs, that it was going under the menu bar and dock even in full scren which is fixed now
 
 ## Settings App
 * Earlier there was a personalize app, which just changes the wallpapers
-* this is now mnerged as a tab in the new brand new settings app, which houses overall settings of the OS
+* this is now merged as a tab in the new brand new settings app, which houses overall settings of the OS
 * like wallpaper, general, widgets
 
 ## Widgets
@@ -120,6 +120,7 @@ The architecture and state management were incredibly complex.
 ## Dock
 - dock is nore improved it has detection for apps state like open, maximized or minimized
 - it also has a feature of auto hide similar to macos dock, and shows up automatically on hovering the lower areas screen
+
 
 ## 🚀 Run it Locally
 
@@ -144,3 +145,4 @@ you are all set on http://localhost:5173
 - used AI to learn about real OS architectures, like how to solve the window positining? got to know how apple uses bounded cascade for positioning windows, 
 - used AI to for quickly genrating eneric and reusable UI components, such as.
 - took help from AI, and my collage friend to fix bugs, like closing window was not quiting the process itslef, window positioning problem and its algorithm
+- used AI to create the ui of the widgets, just some tailwind snippets i used

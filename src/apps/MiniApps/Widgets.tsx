@@ -59,10 +59,7 @@ const Widgets = () => {
                             </div>
                             <div className="p-3 flex justify-between items-center bg-black/40">
                                 <span className="text-sm font-medium">{w.name}</span>
-                                {isActive && (
-                                    <span
-                                        className="text-[10px] font-bold uppercase tracking-wider text-blue-400">Active</span>
-                                )}
+                                {isActive ? (<span className="text-[10px] font-bold uppercase tracking-wider text-blue-400">Applied</span>) : (<span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Apply</span>)}
                             </div>
                         </div>
                     );
