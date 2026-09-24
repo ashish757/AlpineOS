@@ -36,6 +36,7 @@ const componentMap: Record<string, React.ElementType> = {
 
 const OsDesktop: React.FC = () => {
   const windows = useSelector((state: RootState) => state.windows.active);
+  const brightness = useSelector((state: RootState) => state.settings.personalization.brightness);
   const { showMenu } = useContextMenu();
   const dispatch = useDispatch<AppDispatch>();
 
@@ -72,7 +73,9 @@ const OsDesktop: React.FC = () => {
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
 
   return (
-      <div className="w-screen h-screen relative overflow-hidden flex flex-col" >
+      <div className="w-screen h-screen relative overflow-hidden flex flex-col"
+           style={{ filter: `brightness(${brightness}%)` }}
+      >
         <Wallpaper />
         <MenuBar />
 

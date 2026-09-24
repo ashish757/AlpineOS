@@ -22,6 +22,7 @@ interface settingsState {
         currentWallpaper: Wallpaper;
         localWallpapers: Wallpaper[];
         hideDock: boolean;
+        brightness: number;
     };
     widgets: {
         active: Widget[] | [];
@@ -37,7 +38,8 @@ const initialState: settingsState = {
         accentColor: "#0078D4",
         currentWallpaper: localWallpapers[11],
         localWallpapers: localWallpapers,
-        hideDock: false
+        hideDock: false,
+        brightness: 100,
     },
     widgets: {
         active: [{id:"as", type: "clock", x:2, y:1}],
@@ -59,7 +61,7 @@ export const settingsSlice = createSlice({
             }
         },
         addWidget: (state, action: PayloadAction<Widget>) => {
-            state.widgets.active.push(action.payload);
+            state.widgets.active = [...state.widgets.active, action.payload]
         },
         removeWidget: (state, action: PayloadAction<string>) => {
             state.widgets.active = state.widgets.active.filter(w => w.id !== action.payload);
@@ -73,10 +75,15 @@ export const settingsSlice = createSlice({
         },
         toggleDockVisibility: (state) => {
             state.personalization.hideDock = !state.personalization.hideDock;
+        },
+        setBrightness: (state, action: PayloadAction<number>) => {
+            state.personalization.brightness = action.payload;
         }
     }
 });
 
-export const { setWallpaper, addWidget, removeWidget, updateWidgetPosition, toggleDockVisibility } = settingsSlice.actions;
+export const { setWallpaper, addWidget, removeWidget, updateWidgetPosition, toggleDockVisibility, setBrightness } = settingsSlice.actions;
 
 export default settingsSlice.reducer;
+
+
