@@ -6,7 +6,7 @@ import { closeWindow, focusApp, toggleMinimizeWindow } from "../store/windowSlic
 import {toggleLaunchPad} from "../store/settingsSlice.ts";
 
 export const apps = [
-    { id: "launchpad", componentId: "LAUNCHPAD_APP", name: "Launchpad", icon: "assets/icons/folder.png" },
+    { id: "launchpad", componentId: "LAUNCHPAD_APP", name: "Launchpad", icon: "assets/icons/launchpad.png" },
     { id: 'settings', componentId: 'SETTINGS_APP', name: 'Settings', icon: "assets/icons/settings.png" },
     { id: 'activityManager', componentId: 'ACTIVITY_MANAGER_APP', name: 'Activity', icon: "assets/icons/activity.png" },
     { id: 'browser', componentId: 'BROWSER_APP', name: 'Browser', icon: "assets/icons/browser.png" },
