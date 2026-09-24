@@ -41,7 +41,7 @@ const MenuBar = () => {
   };
 
   return (
-      <div className="w-full h-7 bg-slate-900/60 backdrop-blur-md text-slate-200 text-[13px] flex items-center justify-between px-4 z-[999999] border-b border-black/20 select-none">
+      <div className="w-full h-7 bg-slate-900/60 backdrop-blur-md text-slate-200 text-[13px] flex items-center justify-between px-4 z-99 border-b border-black/20 select-none">
 
         <div className="flex gap-4 font-semibold tracking-wide">
           <span className="cursor-default">AlpineOS</span>
