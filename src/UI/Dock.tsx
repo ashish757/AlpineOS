@@ -3,12 +3,17 @@ import { executeProcess } from "../store/processThunk";
 import type { AppDispatch, RootState } from "../store/store";
 import { useContextMenuTrigger } from "./contextMenuUtils";
 import { closeWindow, focusApp, toggleMinimizeWindow } from "../store/windowSlice";
-import FolderIcon from "../assets/icons/folder.png";
-import DocumentIcon from "../assets/icons/document.png";
-import TerminalIcon from "../assets/icons/terminal.png";
-import WWW from "../assets/icons/browser.png";
-import ActivityIcon from "../assets/icons/activity.png";
-import SettingsIcon from "../assets/icons/settings.png";
+import {toggleLaunchPad} from "../store/settingsSlice.ts";
+
+export const apps = [
+    { id: "launchpad", componentId: "LAUNCHPAD_APP", name: "Launchpad", icon: "assets/icons/folder.png" },
+    { id: 'settings', componentId: 'SETTINGS_APP', name: 'Settings', icon: "assets/icons/settings.png" },
+    { id: 'activityManager', componentId: 'ACTIVITY_MANAGER_APP', name: 'Activity', icon: "assets/icons/activity.png" },
+    { id: 'browser', componentId: 'BROWSER_APP', name: 'Browser', icon: "assets/icons/browser.png" },
+    { id: 'finder', componentId: 'FINDER_APP', name: 'Finder', icon: "assets/icons/folder.png" },
+    { id: 'terminal', componentId: 'TERMINAL_APP', name: 'Terminal', icon: "assets/icons/terminal.png" },
+    { id: 'textpad', componentId: 'TEXTPAD_APP', name: 'Textpad', icon: "assets/icons/document.png" },
+];
 
 const Dock = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -17,14 +22,7 @@ const Dock = () => {
     const autoHideDock = useSelector((state: RootState) => state.settings.personalization.hideDock);
     const attachContextMenu = useContextMenuTrigger();
 
-    const apps = [
-        { id: 'settings', componentId: 'SETTINGS_APP', name: 'Settings', icon: SettingsIcon },
-        { id: 'activityManager', componentId: 'ACTIVITY_MANAGER_APP', name: 'Activity', icon: ActivityIcon },
-        { id: 'browser', componentId: 'BROWSER_APP', name: 'Browser', icon: WWW },
-        { id: 'finder', componentId: 'FINDER_APP', name: 'Finder', icon: FolderIcon },
-        { id: 'terminal', componentId: 'TERMINAL_APP', name: 'Terminal', icon: TerminalIcon },
-        { id: 'textpad', componentId: 'TEXTPAD_APP', name: 'Textpad', icon: DocumentIcon },
-    ];
+
 
     const getAppContextMenu = (appId: string, componentId: string) => {
         const appWindows = windows.filter(w => w.componentId === componentId && w.isOpen);
@@ -40,12 +38,18 @@ const Dock = () => {
     };
 
     const handleAppClick = (processId: string, componentId: string) => {
+
+        if(processId == "launchpad") {
+            dispatch(toggleLaunchPad());
+            return;
+        }
         const appWindows = windows.filter(w => w.componentId === componentId && w.isOpen);
 
         if (appWindows.length === 0) {
             dispatch(executeProcess(processId));
             return;
         }
+
 
         const targetWindow = appWindows.reduce((prev, current) =>
             (prev.index > current.index) ? prev : current

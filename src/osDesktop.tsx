@@ -23,6 +23,7 @@ import { executeProcess } from './store/processThunk';
 import { AnimatePresence } from 'framer-motion';
 import {WidgetManager} from "./apps/widgets/WidgetManager.tsx";
 import {createFolder} from "./store/fileSystemSlice.ts";
+import Launchpad from "./UI/Launchpad.tsx";
 
 const componentMap: Record<string, React.ElementType> = {
   'FINDER_APP': FinderApp,
@@ -97,7 +98,7 @@ const OsDesktop: React.FC = () => {
             return null;
           })}
         </AnimatePresence>
-
+      <Launchpad/>
         <Dock />
       </div>
   );

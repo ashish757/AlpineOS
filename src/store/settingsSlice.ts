@@ -23,6 +23,7 @@ interface settingsState {
         localWallpapers: Wallpaper[];
         hideDock: boolean;
         brightness: number;
+        isLaunchpadOpen: boolean;
     };
     widgets: {
         active: Widget[] | [];
@@ -32,6 +33,8 @@ interface settingsState {
 
 const localWallpapers = loadWallpapers();
 
+
+
 const initialState: settingsState = {
     personalization: {
         theme: 'light',
@@ -40,6 +43,7 @@ const initialState: settingsState = {
         localWallpapers: localWallpapers,
         hideDock: false,
         brightness: 100,
+        isLaunchpadOpen: false,
     },
     widgets: {
         active: [{id:"as", type: "clock", x:2, y:1}],
@@ -78,11 +82,14 @@ export const settingsSlice = createSlice({
         },
         setBrightness: (state, action: PayloadAction<number>) => {
             state.personalization.brightness = action.payload;
+        },
+        toggleLaunchPad: (state) => {
+            state.personalization.isLaunchpadOpen = !state.personalization.isLaunchpadOpen;
         }
     }
 });
 
-export const { setWallpaper, addWidget, removeWidget, updateWidgetPosition, toggleDockVisibility, setBrightness } = settingsSlice.actions;
+export const { setWallpaper, addWidget, removeWidget, updateWidgetPosition, toggleDockVisibility, setBrightness, toggleLaunchPad } = settingsSlice.actions;
 
 export default settingsSlice.reducer;
 

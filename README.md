@@ -105,8 +105,10 @@ This is for my webOS1, for webOS2 i will be going way farrr
    npm run dev
    ```
 you are all set on http://localhost:5173
-please let me know if anything breaks
-ashishrajsingh75@gmail.com
+
+
+
+
 
 
 
