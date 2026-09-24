@@ -111,7 +111,7 @@ The architecture and state management were incredibly complex.
 
 ## Widgets
 * Widgets can now be added on the desktop and are draggable to any position on the desktop
-* ![img.png](img.png)
+![img.png](img.png)
 
 ## Dock
 - dock is nore improved it has detection for apps state like open, maximized or minimized
